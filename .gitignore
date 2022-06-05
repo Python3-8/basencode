@@ -1,0 +1,5 @@
+__pycache__
+basencode.egg-info
+build
+dist
+setup.py
