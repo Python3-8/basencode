@@ -56,17 +56,17 @@ Integer(4941)
 
 ### Global Variables
 
-`BASEN_DIGITS`: `List[str]` of default digits for base `N`, default digits are defined for bases 2-36 and 64 
-`BASE_DIGITS`: `Dict[int, List[str]]` of all default digits
+* `BASEN_DIGITS`: `List[str]` of default digits for base `N`, default digits are defined for bases 2-36 and 64 
+* `BASE_DIGITS`: `Dict[int, List[str]]` of all default digits
 
 ### Classes
 
-`Integer`: `Integer` class
+* `Integer`: `Integer` class
 
 #### Class Properties
 
-`Integer.base_digits`: `Dict[int, List[str]]` of all default digits for the `Integer`, updated by `Integer.get_digits`
-`Integer.dec_value`: `int` of the decimal value of the `Integer`, never changes after initialization
+* `Integer.base_digits`: `Dict[int, List[str]]` of all default digits for the `Integer`, updated by `Integer.get_digits`
+* `Integer.dec_value`: `int` of the decimal value of the `Integer`, never changes after initialization
 
 #### Class Methods
 * `Integer.__init__(self, n: Union[int, str], base: int = 10, digits: List[str] = []) -> None`: Takes `n` (`str` preferred, `int` is okay if `base` is `10`) and converts it from `base` (`int`) to decimal and stores in `Integer.dec_value`, `digits` (`List[str]`) is required if `base` does not have default digits (see `BASEN_DIGITS`)
