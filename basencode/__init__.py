@@ -90,7 +90,7 @@ class Integer:
             if int(n) < 0:
                 raise Exception('n must be positive')
             return
-        if type(n) != str:
+        if not isinstance(n, str):
             raise Exception(
                 f'base is not 10, so expected n to be of type {str} but got {type(n)}')
         n = n.upper()
