@@ -1,11 +1,12 @@
 from typing import Dict, List, Union
+from string import digits, ascii_lowercase, ascii_uppercase
 
-__author__: str = 'pranav.pooruli@gmail.com'
-__name__: str = 'basencode'
+__author__ = 'pranav.pooruli@gmail.com'
+__name__ = 'basencode'
 
-ALL_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/"
+ALL_CHARACTERS = f'{digits}{ascii_uppercase}{ascii_lowercase}+/'
+BASE_DIGITS: Dict[int, List[str]] = {1: ['0']}
 
-BASE_DIGITS: Dict[int, List[str]] = {1: ["0"]}
 for i in range(2, 65):
     BASE_DIGITS[i] = BASE_DIGITS[i - 1] + [ALL_CHARACTERS[i - 1]]
 
