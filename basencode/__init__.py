@@ -1,84 +1,13 @@
-from string import ascii_lowercase, ascii_uppercase, digits
 from typing import Dict, List, Union
 
 __author__: str = 'pranav.pooruli@gmail.com'
 __name__: str = 'basencode'
 
-BASE2_DIGITS: List[str] = list('01')
-BASE3_DIGITS: List[str] = list('012')
-BASE4_DIGITS: List[str] = list('0123')
-BASE5_DIGITS: List[str] = list('01234')
-BASE6_DIGITS: List[str] = list('0122345')
-BASE7_DIGITS: List[str] = list('0123456')
-BASE8_DIGITS: List[str] = list('01234567')
-BASE9_DIGITS: List[str] = list('012345678')
-BASE10_DIGITS: List[str] = list(digits)
-BASE11_DIGITS: List[str] = BASE10_DIGITS + list('A')
-BASE12_DIGITS: List[str] = BASE10_DIGITS + list('AB')
-BASE13_DIGITS: List[str] = BASE10_DIGITS + list('ABC')
-BASE14_DIGITS: List[str] = BASE10_DIGITS + list('ABCD')
-BASE15_DIGITS: List[str] = BASE10_DIGITS + list('ABCDE')
-BASE16_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEF')
-BASE17_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFG')
-BASE18_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGH')
-BASE19_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHI')
-BASE20_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHIJ')
-BASE21_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHIJK')
-BASE22_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHIJKL')
-BASE23_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHIJKLM')
-BASE24_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHIJKLMN')
-BASE25_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHIJKLMNO')
-BASE26_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHIJKLMNOP')
-BASE27_DIGITS: List[str] = BASE10_DIGITS + list('ABCDEFGHIJKLMNOPQ')
-BASE28_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:18])
-BASE29_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:19])
-BASE30_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:20])
-BASE31_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:21])
-BASE32_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:22])
-BASE33_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:23])
-BASE34_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:24])
-BASE35_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:25])
-BASE36_DIGITS: List[str] = BASE10_DIGITS + list(ascii_uppercase[:26])
-BASE64_DIGITS: List[str] = list(
-    digits + ascii_uppercase + ascii_lowercase + '+/')
-BASE_DIGITS: Dict[int, List[str]] = {
-    2: BASE2_DIGITS,
-    3: BASE3_DIGITS,
-    4: BASE4_DIGITS,
-    5: BASE5_DIGITS,
-    6: BASE6_DIGITS,
-    7: BASE7_DIGITS,
-    8: BASE8_DIGITS,
-    9: BASE9_DIGITS,
-    10: BASE10_DIGITS,
-    11: BASE11_DIGITS,
-    12: BASE12_DIGITS,
-    13: BASE13_DIGITS,
-    14: BASE14_DIGITS,
-    15: BASE15_DIGITS,
-    16: BASE16_DIGITS,
-    17: BASE17_DIGITS,
-    18: BASE18_DIGITS,
-    19: BASE19_DIGITS,
-    20: BASE20_DIGITS,
-    21: BASE21_DIGITS,
-    22: BASE22_DIGITS,
-    23: BASE23_DIGITS,
-    24: BASE24_DIGITS,
-    25: BASE25_DIGITS,
-    26: BASE26_DIGITS,
-    27: BASE27_DIGITS,
-    28: BASE28_DIGITS,
-    29: BASE29_DIGITS,
-    30: BASE30_DIGITS,
-    31: BASE31_DIGITS,
-    32: BASE32_DIGITS,
-    33: BASE33_DIGITS,
-    34: BASE34_DIGITS,
-    35: BASE35_DIGITS,
-    36: BASE36_DIGITS,
-    64: BASE64_DIGITS,
-}
+ALL_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/"
+
+BASE_DIGITS: Dict[int, List[str]] = {1: ["0"]}
+for i in range(2, 65):
+    BASE_DIGITS[i] = BASE_DIGITS[i - 1] + [ALL_CHARACTERS[i - 1]]
 
 
 class Integer:
