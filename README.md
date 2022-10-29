@@ -50,7 +50,6 @@ Integer(4941)
 * Support operations between `int` and `Integer`
 * Add support for `float`s
 * Retain all default digits during arithmetic operations
-* Add default digits for all bases up to 64 (37-63)
 
 ## Literally Everything
 
