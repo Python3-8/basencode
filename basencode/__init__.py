@@ -18,10 +18,10 @@ class Integer:
         if base == 10:
             self.dec_value = int(n)
             if int(n) < 0:
-                raise Exception('n must be positive')
+                raise ValueError('n must be positive')
             return
         if not isinstance(n, str):
-            raise Exception(
+            raise TypeError(
                 f'base is not 10, so expected n to be of type {str} but got {type(n)}')
         n = n.upper()
         digits_: List[str] = self.get_digits(base, digits)
@@ -82,7 +82,7 @@ class Integer:
         digits_: List[str]
         if not digits:
             if base not in self.base_digits:
-                raise Exception(
+                raise ValueError(
                     f'abnormal base base {base} provided, digits must not be empty')
             else:
                 digits_ = self.base_digits[base]
@@ -90,7 +90,7 @@ class Integer:
             digits_ = self.remove_dupl_digits(digits)
             self.base_digits[base] = digits_
         if len(digits_) != base:
-            raise Exception(
+            raise ValueError(
                 f'expected exactly {base} digits for base {base}, got {len(digits_)} after removing duplicates')
         return digits_
 
