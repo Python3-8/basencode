@@ -3,3 +3,4 @@ basencode.egg-info
 build
 dist
 setup.py
+.DS_Store
