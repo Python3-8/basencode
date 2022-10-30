@@ -14,16 +14,17 @@ for i in range(2, 65):
 def get_int_func(func_name):
     int_func = getattr(int, func_name)
 
+
     def convert_from_int_and_call(self, other):
         if isinstance(other, int):
             val = int_func(self.dec_value, other)
         else:
             val = int_func(self.dec_value, other.dec_value)
-        # Return an Integer if it's an int
-        # We don't use `isinstance` as bools are considered ints in Python
         if type(val) == int:
             return Integer(val)
         return val
+
+
     return convert_from_int_and_call
 
 
@@ -118,11 +119,11 @@ class Integer:
     def to_base64(self) -> str:
         return self.to_base(64)
 
-    __eq__ = get_int_func("__eq__")
-    __add__ = get_int_func("__add__")
-    __sub__ = get_int_func("__sub__")
-    __mul__ = get_int_func("__mul__")
-    __truediv__ = get_int_func("__truediv__")
-    __floordiv__ = get_int_func("__floordiv__")
-    __mod__ = get_int_func("__mod__")
-    __divmod__ = get_int_func("__divmod__")
+    __eq__ = get_int_func('__eq__')
+    __add__ = get_int_func('__add__')
+    __sub__ = get_int_func('__sub__')
+    __mul__ = get_int_func('__mul__')
+    __truediv__ = get_int_func('__truediv__')
+    __floordiv__ = get_int_func('__floordiv__')
+    __mod__ = get_int_func('__mod__')
+    __divmod__ = get_int_func('__divmod__')
