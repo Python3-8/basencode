@@ -58,6 +58,7 @@ Number(4941)
 
 ### Global Variables
 
+- `ALL_DIGITS`: `str` of all digits used in default digits
 - `BASE_DIGITS`: `Dict[int, List[str]]` of all default digits for bases 1-64
 
 ### Classes
@@ -79,7 +80,7 @@ Number(4941)
 - `Number.to_hex(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to hexadecimal
 - `Number.to_base64(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to base 64
 
-## Things to Know
+## Things to Note
 
 - When providing the `digits` property, make sure the digits are in order from lowest value to highest value, for example, the `digits` property for hexadecimal would look like this: `list('0123456789abcdef')`
 - By default, the default digits for all bases up to base 64 go as so:

@@ -1,7 +1,9 @@
 from string import ascii_letters, digits
 from typing import Dict, List, Union
+from decimal import Decimal
 
 __name__ = 'basencode'
+__all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'Number'
 
 ALL_DIGITS = f'{digits}{ascii_letters}+/'
 BASE_DIGITS: Dict[int, List[str]] = {1: ['0']}
@@ -16,6 +18,8 @@ def get_int_method(method_name):
     def convert_from_int_and_call(self, other):
         if isinstance(other, int):
             val = int_method(self._dec_value, other)
+        elif isinstance(other, Decimal):
+            val = int_method(self._dec_value, int(other))
         else:
             val = int_method(self._dec_value, other._dec_value)
         if isinstance(val, tuple):
@@ -119,7 +123,15 @@ class Number:
     def dec_value(self) -> int:
         return self._dec_value
 
-    __eq__ = get_int_method('__eq__')
+    def __eq__(self, other):
+        return self._dec_value == other
+
+    def __bool__(self):
+        return bool(self._dec_value)
+
+    def __abs__(self):
+        return self._dec_value
+
     __add__ = get_int_method('__add__')
     __sub__ = get_int_method('__sub__')
     __mul__ = get_int_method('__mul__')
