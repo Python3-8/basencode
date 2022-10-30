@@ -7,73 +7,86 @@ Convert numbers of any base back and forth.
 To install `basencode`, run `python3 -m pip install basencode`. Now you should be able to use `basencode` in any Python program.
 
 ## Example
+
 ```py
 >>> from basencode import *
->>> myint1 = Integer(12345)
->>> myint1.to_base(64) # Default digits are used, but can be overridden
-'30v'
->>> myint1.to_base(8)
+>>> n1 = Number(12345)
+>>> n1.to_base(64) # Default digits are used, but can be overridden
+'30V'
+>>> Number('30V', 64) # Construct Number from base 64
+Number(12345)
+>>> n1.to_base(8)
 '30071'
->>> myint1.to_octal()
+>>> n1.to_octal()
 '30071'
->>> myint1.to_bin()
+>>> n1.to_bin()
 '11000000111001'
->>> myint1.to_base(2, list('-+')) # Default digits are overridden
+>>> n1.to_base(2, list('-+'))
 '++------+++--+'
->>> myint1.to_base(33)
-'BB3'
->>> from string import ascii_lowercase, ascii_uppercase, digits, punctuation
->>> myint1.to_base(76, list(digits + ascii_lowercase + ascii_uppercase + punctuation[:14]))
+>>> n1.to_bin() # Default digits were overridden
+'++------+++--+'
+>>> n1.to_base(33)
+'bb3'
+>>> from string import digits, ascii_letters, punctuation
+>>> n1.to_base(76, list(digits + ascii_letters + punctuation[:14]))
 '2ax'
->>> myint1.to_base(76) # Digits provided above were stored as default digits for base 76
+>>> n1.to_base(76) # Digits provided above were stored as default digits for base 76
 '2ax'
->>> myint2 = Integer(54321)
->>> myint1 + myint2
-Integer(66666)
->>> myint2 - myint1
-Integer(41976)
->>> myint1 * myint2
-Integer(670592745)
->>> myint2 / myint1
-4.400243013365735
->>> myint2 // myint1
-Integer(4)
->>> myint2 % myint1
-Integer(4941)
->>> divmod(myint2, myint1)
-(Integer(4), Integer(4941))
+>>> n2 = Number(54321)
+>>> n1 + n2
+Number(66666)
+>>> n2 - n1
+Number(41976)
+>>> n1 * n2
+Number(670592745)
+>>> n2 / n1
+Number(4)
+>>> n2 // n1
+Number(4)
+>>> n2 % n1
+Number(4941)
+>>> divmod(n2, n1)
+(Number(4), Number(4941))
 ```
 
 ## TODO
-* Add support for `float`s
-* Retain all default digits during arithmetic operations
 
-## Literally Everything
+- Add support for `float`s
+- Retain all default digits during arithmetic operations
+
+## Documentation
 
 ### Global Variables
 
-* `BASEN_DIGITS`: `List[str]` of default digits for base `N`, default digits are defined for bases 2-36 and 64 
-* `BASE_DIGITS`: `Dict[int, List[str]]` of all default digits
+- `BASE_DIGITS`: `Dict[int, List[str]]` of all default digits for bases 1-64
 
 ### Classes
 
-* `Integer`: `Integer` class
+- `Number`: `Number` class
 
 #### Class Properties
 
-* `Integer.base_digits`: `Dict[int, List[str]]` of all default digits for the `Integer`, updated by `Integer.get_digits`
-* `Integer.dec_value`: `int` of the decimal value of the `Integer`, never changes after initialization
+- `Number.base_digits`: `Dict[int, List[str]]` of all default digits for the `Number`, updated by `Number._get_digits`
+- `Number.dec_value -> int`: This getter returns the decimal value of the `Number` as an `int` which is stored in `Number._dec_value`
 
 #### Class Methods
-* `Integer.__init__(self, n: Union[int, str], base: int = 10, digits: List[str] = []) -> None`: Takes `n` (`str` preferred, `int` is okay if `base` is `10`) and converts it from `base` (`int`) to decimal and stores in `Integer.dec_value`, `digits` (`List[str]`) is required if `base` does not have default digits (see `BASEN_DIGITS`)
-* `Integer.to_base(self, base: int, digits: List[str] = []) -> str`: Converts `Integer.dec_value` to `base` (`int`), and converts it from `base` (`int`) to decimal and stores in `Integer.dec_value`, `digits` (`List[str]`) is required if `base` does not have default digits (see `BASEN_DIGITS`)
-* `Integer.to_dec(self) -> int`: Returns `Integer.dec_value`
-* `Integer.to_bin(self) -> str`: Uses `Integer.to_base` to convert `Integer.dec_value` to binary
-* `Integer.to_octal(self) -> str`: Uses `Integer.to_base` to convert `Integer.dec_value` to octal
-* `Integer.to_hex(self) -> str`: Uses `Integer.to_base` to convert `Integer.dec_value` to hexadecimal
-* `Integer.to_base64(self) -> str`: Uses `Integer.to_base` to convert `Integer.dec_value` to base 64
-* `Integer.get_digits(self, base: int, digits: List[str]) -> List[str]`: Validates `digits` (which is a `List[str]` by removing duplicates and checking if the number of digits matches the base), and returns either default digits (if `base` has defined default digits and `digits` is empty) or the validated `digits` (either if `base` is an abnormal base or `base` is a known base but the digits are overridden), this method is called by `Integer.__init__`
-* `Integer.remove_dupl_digits(self, l: List[str]) -> List[str]`: Removes duplicates from `l` (`List[str]`) and returns the new `List[str]`, this method is called by `Integer.get_digits`
+
+- `Number.__init__(self, n: Union[int, str], base: int = 10, digits: List[str] = []) -> None`: Takes `n` (`str` preferred, `int` is okay if `base` is `10`) and converts it from `base` (`int`) to decimal and stores in `Number._dec_value`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `Number.to_base(self, base: int, digits: List[str] = []) -> str`: Converts `Number._dec_value` to `base` (`int`), and returns a `str`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `Number.to_dec(self) -> int`: Returns `Number._dec_value`
+- `Number.to_bin(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to binary
+- `Number.to_octal(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to octal
+- `Number.to_hex(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to hexadecimal
+- `Number.to_base64(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to base 64
 
 ## Things to Know
-* When providing the `digits` property, make sure the digits are in order from lowest value to highest value, for example, the `digits` property for hexadecimal would look like this: `list('0123456789ABCDEF')`
+
+- When providing the `digits` property, make sure the digits are in order from lowest value to highest value, for example, the `digits` property for hexadecimal would look like this: `list('0123456789abcdef')`
+- By default, the default digits for all bases up to base 64 go as so:
+
+  - Digits 0-9
+  - Lowercase alphabet
+  - Uppercase alphabet
+  - `+` and `/`
+
+  therefore, `Number('DF', 16)` without overriding the digits for base 16 will throw an error because hexadecimal only has the digits 0-f (**lowercase** "f"). `Number('df', 16)` will construct `Number(223)`.
