@@ -32,22 +32,19 @@ To install `basencode`, run `python3 -m pip install basencode`. Now you should b
 Integer(66666)
 >>> myint2 - myint1
 Integer(41976)
->>>
 >>> myint1 * myint2
 Integer(670592745)
 >>> myint2 / myint1
-Integer(4)
+4.400243013365735
 >>> myint2 // myint1
 Integer(4)
 >>> myint2 % myint1
 Integer(4941)
 >>> divmod(myint2, myint1)
 (Integer(4), Integer(4941))
-
 ```
 
 ## TODO
-* Support operations between `int` and `Integer`
 * Add support for `float`s
 * Retain all default digits during arithmetic operations
 

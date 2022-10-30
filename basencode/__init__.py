@@ -1,5 +1,5 @@
+from string import ascii_lowercase, ascii_uppercase, digits
 from typing import Dict, List, Union
-from string import digits, ascii_lowercase, ascii_uppercase
 
 __author__ = 'pranav.pooruli@gmail.com'
 __name__ = 'basencode'
@@ -9,6 +9,22 @@ BASE_DIGITS: Dict[int, List[str]] = {1: ['0']}
 
 for i in range(2, 65):
     BASE_DIGITS[i] = BASE_DIGITS[i - 1] + [ALL_CHARACTERS[i - 1]]
+
+
+def get_int_func(func_name):
+    int_func = getattr(int, func_name)
+
+    def convert_from_int_and_call(self, other):
+        if isinstance(other, int):
+            val = int_func(self.dec_value, other)
+        else:
+            val = int_func(self.dec_value, other.dec_value)
+        # Return an Integer if it's an int
+        # We don't use `isinstance` as bools are considered ints in Python
+        if type(val) == int:
+            return Integer(val)
+        return val
+    return convert_from_int_and_call
 
 
 class Integer:
@@ -63,21 +79,6 @@ class Integer:
         new_digits += digits_[0] * place
         return new_digits
 
-    def to_dec(self) -> int:
-        return self.dec_value
-
-    def to_bin(self) -> str:
-        return self.to_base(2)
-
-    def to_octal(self) -> str:
-        return self.to_base(8)
-
-    def to_hex(self) -> str:
-        return self.to_base(16)
-
-    def to_base64(self) -> str:
-        return self.to_base(64)
-
     def get_digits(self, base: int, digits: List[str]) -> List[str]:
         digits_: List[str]
         if not digits:
@@ -99,29 +100,29 @@ class Integer:
         dupl_add = dupl.add
         return [x for x in l if not (x in dupl or dupl_add(x))]
 
-    def __eq__(self, other):
-        return self.dec_value == other.dec_value
-
     def __repr__(self):
         return f'Integer({self.dec_value})'
 
-    def __add__(self, other):
-        return Integer(self.dec_value + other.dec_value)
+    def to_dec(self) -> int:
+        return self.dec_value
 
-    def __sub__(self, other):
-        return Integer(self.dec_value - other.dec_value)
+    def to_bin(self) -> str:
+        return self.to_base(2)
 
-    def __mul__(self, other):
-        return Integer(self.dec_value * other.dec_value)
+    def to_octal(self) -> str:
+        return self.to_base(8)
 
-    def __truediv__(self, other):
-        return Integer(self.dec_value // other.dec_value)
+    def to_hex(self) -> str:
+        return self.to_base(16)
 
-    def __floordiv__(self, other):
-        return self / other
+    def to_base64(self) -> str:
+        return self.to_base(64)
 
-    def __mod__(self, other):
-        return Integer(self.dec_value % other.dec_value)
-
-    def __divmod__(self, other):
-        return tuple(Integer(val) for val in divmod(self.dec_value, other.dec_value))
+    __eq__ = get_int_func("__eq__")
+    __add__ = get_int_func("__add__")
+    __sub__ = get_int_func("__sub__")
+    __mul__ = get_int_func("__mul__")
+    __truediv__ = get_int_func("__truediv__")
+    __floordiv__ = get_int_func("__floordiv__")
+    __mod__ = get_int_func("__mod__")
+    __divmod__ = get_int_func("__divmod__")
