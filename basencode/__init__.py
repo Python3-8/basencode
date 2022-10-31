@@ -60,12 +60,12 @@ class Number:
         Represent a Number in any positive integer base.
 
         Args:
-        base: int         --> The base in which the representation should be
-        digits: List[Str] --> The digits to be used in the representation (uses digits from BASE_DIGITS)
-        mode: str         --> Either 's' (str) or 'l' (list); how the representation should be returned. Defaults to 's'
+        `base: int`         --> The base in which the representation should be
+        `digits: List[Str]` --> The digits to be used in the representation (uses digits from BASE_DIGITS)
+        `mode: str`         --> Either 's' (str) or 'l' (list); how the representation should be returned. Defaults to 's'
 
         Returns:
-        A str or list (based on the mode) which is a representation of the Number in the given base
+        A `str` or `list` (based on the mode) which is a representation of the Number in the given base
 
         '''
         if mode not in ('s', 'l'):
