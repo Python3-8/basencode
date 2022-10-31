@@ -57,6 +57,8 @@ def test_number_methods():
     assert n2 / n1 == Number(4)
     assert n2 // n1 == Number(4)
     assert divmod(n2, n1) == (Number(4), Number(4941))
+    assert abs(n1) == 12345
+    assert bool(n1) == True
 
 
 def test_compatability_with_ints():
