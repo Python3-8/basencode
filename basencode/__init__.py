@@ -1,12 +1,13 @@
 from string import ascii_letters, digits
-from typing import Dict, List, Union
+from typing import Dict, List, Tuple, Union
 from decimal import Decimal
 
 __name__ = 'basencode'
-__all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'Number'
+__all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'Integer'
 
 ALL_DIGITS = f'{digits}{ascii_letters}+/'
-BASE_DIGITS: Dict[int, List[str]] = {1: ['0']}
+BASE_DIGITS: Dict[int, List[str]] = {1: ['1']}
+RADIX_POINT = '.'
 
 for i in range(2, 65):
     BASE_DIGITS[i] = BASE_DIGITS[i - 1] + [ALL_DIGITS[i - 1]]
@@ -26,26 +27,35 @@ def get_int_method(method_name, convert_to_number=True):
         else:
             val = int_method(self._dec_value)
         if isinstance(val, tuple):
-            return tuple(Number(el) for el in val)
+            return tuple(Integer(el) for el in val)
         if type(val) == bool or isinstance(val, int) and not convert_to_number:
             return val
-        return Number(val)
+        return Integer(val)
 
     return convert_from_int_and_call
 
 
-class Number:
+class Number:  # WORK IN PROGRESS
+    def __new__(cls, n: Union[int, str], base: int = 10, digits: List[str] = [],
+                radix_point: str = RADIX_POINT):
+        pass
+
+
+class Integer:
     base_digits: Dict[int, List[str]] = BASE_DIGITS
 
-    def __init__(self, n: Union[int, str], base: int = 10, digits: List[str] = []) -> None:
+    def __init__(self, n: Union[int, str, Tuple[Union[int, str]], List[Union[int, str]]],
+                 base: int = 10, digits: List[str] = []) -> None:
         if base == 10:
-            self._dec_value = int(n)
+            self._dec_value = int(n) if type(
+                n) == str else int(''.join(str(el) for el in n))
             if int(n) < 0:
                 raise ValueError('n must be positive')
             return
-        if not isinstance(n, str):
-            raise TypeError(
-                f'base is not 10, so expected n to be of type {str} but got {type(n)}')
+        if type(n) in (int, str):
+            n = list(str(n))
+        else:
+            n = [str(el) for el in n]
         digits_: List[str] = self._get_digits(base, digits)
         if base == 1:
             self._dec_value = len(n)

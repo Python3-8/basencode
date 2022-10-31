@@ -10,23 +10,23 @@ To install `basencode`, run `python3 -m pip install basencode`. Now you should b
 
 ```py
 >>> from basencode import *
->>> n1 = Number(12345)
+>>> n1 = Integer(12345)
 # Default digits are used
 >>> n1.repr_in_base(64)
 '30V'
-# Construct Number from base 64
->>> Number('30V', 64)
-Number(12345)
+# Construct Integer from base 64
+>>> Integer('30V', 64)
+Integer(12345)
 >>> n1.repr_in_base(8)
 '30071'
->>> n1.to_octal()
+>>> n1.repr_in_octal()
 '30071'
->>> n1.to_bin()
+>>> n1.repr_in_bin()
 '11000000111001'
 # Overriding default digits
 >>> n1.repr_in_base(2, list('-+'))
 '++------+++--+'
->>> n1.to_bin()
+>>> n1.repr_in_bin()
 '++------+++--+'
 >>> n1.repr_in_base(33)
 'bb3'
@@ -35,27 +35,27 @@ Number(12345)
 '2ax'
 >>> n1.repr_in_base(76) # Digits provided above were stored as default digits for base 76
 '2ax'
->>> n2 = Number(54321)
+>>> n2 = Integer(54321)
 >>> n1 + n2
-Number(66666)
+Integer(66666)
 >>> n2 - n1
-Number(41976)
+Integer(41976)
 >>> n1 * n2
-Number(670592745)
-# Both true and floor division return a Number and perform the same functionality (as of now)
+Integer(670592745)
+# Both true and floor division return an Integer and perform the same functionality (as of now)
 >>> n2 / n1
-Number(4)
+Integer(4)
 >>> n2 // n1
-Number(4)
+Integer(4)
 >>> n2 % n1
-Number(4941)
+Integer(4941)
 >>> divmod(n2, n1)
-(Number(4), Number(4941))
-# Operations can also be performed with integers, though Numbers will be returned
+(Integer(4), Integer(4941))
+# Operations can also be performed with ints, though Integers will be returned
 >>> n1 == 12345
 True
 >>> n1 + 54321
-Number(66666)
+Integer(66666)
 # Modes can be used to indicate how the representation should be
 >>> n1.repr_in_base(64, mode='s') # 'mode' is 's' by default
 '30V'
@@ -67,6 +67,7 @@ Number(66666)
 
 - Add support for `float`s
 - Retain all default digits during arithmetic operations
+- Convert to base 10 even when provided base 10 in `Integer.__init__`
 
 ## Documentation
 
@@ -77,22 +78,22 @@ Number(66666)
 
 ### Classes
 
-- `Number`: `Number` class
+- `Integer`: `Integer` class
 
 #### Class Properties
 
-- `Number.base_digits`: `Dict[int, List[str]]` of all default digits for the `Number`, updated by `Number._get_digits`
-- `Number.dec_value -> int`: This getter returns the decimal value of the `Number` as an `int` which is stored in `Number._dec_value`
+- `base_digits`: `Dict[int, List[str]]` of all default digits for the `Integer`, updated by `Integer._get_digits`
+- `dec_value -> int`: This getter returns the decimal value of the `Integer` as an `int` which is stored in `Integer._dec_value`
 
 #### Class Methods
 
-- `Number.__init__(self, n: Union[int, str], base: int = 10, digits: List[str] = []) -> None`: Takes `n` (`str` preferred, `int` is okay if `base` is `10`) and converts it from `base` (`int`) to decimal and stores in `Number._dec_value`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `Number.repr_in_base(self, base: int, digits: List[str] = []) -> str`: Converts `Number._dec_value` to `base` (`int`), and returns a `str`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `Number.repr_in_dec(self) -> int`: Returns `Number._dec_value`
-- `Number.repr_in_bin(self) -> str`: Uses `Number.repr_in_base` to convert `Number._dec_value` to binary
-- `Number.repr_in_octal(self) -> str`: Uses `Number.repr_in_base` to convert `Number._dec_value` to octal
-- `Number.repr_in_hex(self) -> str`: Uses `Number.repr_in_base` to convert `Number._dec_value` to hexadecimal
-- `Number.repr_in_base64(self) -> str`: Uses `Number.repr_in_base` to convert `Number._dec_value` to base 64
+- `__init__(self, n: Union[int, str], base: int = 10, digits: List[str] = []) -> None`: Takes `n` (`str` preferred, `int` is okay if `base` is `10`) and converts it from `base` (`int`) to decimal and stores in `Integer._dec_value`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `repr_in_base(self, base: int, digits: List[str] = []) -> str`: Converts `Integer._dec_value` to `base` (`int`), and returns a `str`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `repr_in_dec(self) -> int`: Returns `Integer._dec_value`
+- `repr_in_bin(self) -> str`: Uses `Integer.repr_in_base` to convert `Integer._dec_value` to binary
+- `repr_in_octal(self) -> str`: Uses `Integer.repr_in_base` to convert `Integer._dec_value` to octal
+- `repr_in_hex(self) -> str`: Uses `Integer.repr_in_base` to convert `Integer._dec_value` to hexadecimal
+- `repr_in_base64(self) -> str`: Uses `Integer.repr_in_base` to convert `Integer._dec_value` to base 64
 
 ## Things to Note
 
@@ -104,4 +105,4 @@ Number(66666)
   - Uppercase alphabet
   - `+` and `/`
 
-  therefore, `Number('DF', 16)` without overriding the digits for base 16 will throw an error because hexadecimal only has the digits 0-f (**lowercase** "f"). `Number('df', 16)` will construct `Number(223)`.
+  therefore, `Integer('DF', 16)` without overriding the digits for base 16 will throw an error because hexadecimal only has the digits 0-f (**lowercase** "f"). `Integer('df', 16)` will construct `Integer(223)`.
