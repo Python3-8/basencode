@@ -39,6 +39,7 @@ Number(66666)
 Number(41976)
 >>> n1 * n2
 Number(670592745)
+# Both true and floor division return a Number and perform the same functionality
 >>> n2 / n1
 Number(4)
 >>> n2 // n1
@@ -47,6 +48,11 @@ Number(4)
 Number(4941)
 >>> divmod(n2, n1)
 (Number(4), Number(4941))
+# Operations can also be performed with integers, though Numbers will be returned
+>>> n1 == 12345
+True
+>>> n1 + 54321
+Number(66666)
 ```
 
 ## TODO
