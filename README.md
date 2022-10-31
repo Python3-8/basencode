@@ -11,26 +11,29 @@ To install `basencode`, run `python3 -m pip install basencode`. Now you should b
 ```py
 >>> from basencode import *
 >>> n1 = Number(12345)
->>> n1.to_base(64) # Default digits are used, but can be overridden
+# Default digits are used
+>>> n1.repr_in_base(64) 
 '30V'
->>> Number('30V', 64) # Construct Number from base 64
+# Construct Number from base 64
+>>> Number('30V', 64) 
 Number(12345)
->>> n1.to_base(8)
+>>> n1.repr_in_base(8)
 '30071'
 >>> n1.to_octal()
 '30071'
 >>> n1.to_bin()
 '11000000111001'
->>> n1.to_base(2, list('-+'))
+# Overriding default digits
+>>> n1.repr_in_base(2, list('-+'))
 '++------+++--+'
->>> n1.to_bin() # Default digits were overridden
+>>> n1.to_bin() 
 '++------+++--+'
->>> n1.to_base(33)
+>>> n1.repr_in_base(33)
 'bb3'
 >>> from string import digits, ascii_letters, punctuation
->>> n1.to_base(76, list(digits + ascii_letters + punctuation[:14]))
+>>> n1.repr_in_base(76, list(digits + ascii_letters + punctuation[:14]))
 '2ax'
->>> n1.to_base(76) # Digits provided above were stored as default digits for base 76
+>>> n1.repr_in_base(76) # Digits provided above were stored as default digits for base 76
 '2ax'
 >>> n2 = Number(54321)
 >>> n1 + n2
@@ -53,6 +56,11 @@ Number(4941)
 True
 >>> n1 + 54321
 Number(66666)
+# Modes can be used to indicate how the representation should be
+>>> n1.repr_in_base(64, mode="s") # Default
+"30V"
+>>> n1.repr_in_base(2, digits=["++", "--"], mode="l")
+["--", "--", "++", "++", "++", "++", "++", "++", "--", "--", "--", "++", "++", "--"]
 ```
 
 ## TODO
@@ -79,12 +87,12 @@ Number(66666)
 #### Class Methods
 
 - `Number.__init__(self, n: Union[int, str], base: int = 10, digits: List[str] = []) -> None`: Takes `n` (`str` preferred, `int` is okay if `base` is `10`) and converts it from `base` (`int`) to decimal and stores in `Number._dec_value`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `Number.to_base(self, base: int, digits: List[str] = []) -> str`: Converts `Number._dec_value` to `base` (`int`), and returns a `str`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `Number.repr_in_base(self, base: int, digits: List[str] = []) -> str`: Converts `Number._dec_value` to `base` (`int`), and returns a `str`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
 - `Number.to_dec(self) -> int`: Returns `Number._dec_value`
-- `Number.to_bin(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to binary
-- `Number.to_octal(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to octal
-- `Number.to_hex(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to hexadecimal
-- `Number.to_base64(self) -> str`: Uses `Number.to_base` to convert `Number._dec_value` to base 64
+- `Number.to_bin(self) -> str`: Uses `Number.repr_in_base` to convert `Number._dec_value` to binary
+- `Number.to_octal(self) -> str`: Uses `Number.repr_in_base` to convert `Number._dec_value` to octal
+- `Number.to_hex(self) -> str`: Uses `Number.repr_in_base` to convert `Number._dec_value` to hexadecimal
+- `Number.repr_in_base64(self) -> str`: Uses `Number.repr_in_base` to convert `Number._dec_value` to base 64
 
 ## Things to Note
 
