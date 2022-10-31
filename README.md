@@ -12,10 +12,10 @@ To install `basencode`, run `python3 -m pip install basencode`. Now you should b
 >>> from basencode import *
 >>> n1 = Number(12345)
 # Default digits are used
->>> n1.repr_in_base(64) 
+>>> n1.repr_in_base(64)
 '30V'
 # Construct Number from base 64
->>> Number('30V', 64) 
+>>> Number('30V', 64)
 Number(12345)
 >>> n1.repr_in_base(8)
 '30071'
@@ -26,7 +26,7 @@ Number(12345)
 # Overriding default digits
 >>> n1.repr_in_base(2, list('-+'))
 '++------+++--+'
->>> n1.to_bin() 
+>>> n1.to_bin()
 '++------+++--+'
 >>> n1.repr_in_base(33)
 'bb3'
@@ -42,7 +42,7 @@ Number(66666)
 Number(41976)
 >>> n1 * n2
 Number(670592745)
-# Both true and floor division return a Number and perform the same functionality
+# Both true and floor division return a Number and perform the same functionality (as of now)
 >>> n2 / n1
 Number(4)
 >>> n2 // n1
@@ -57,10 +57,10 @@ True
 >>> n1 + 54321
 Number(66666)
 # Modes can be used to indicate how the representation should be
->>> n1.repr_in_base(64, mode="s") # Default
-"30V"
->>> n1.repr_in_base(2, digits=["++", "--"], mode="l")
-["--", "--", "++", "++", "++", "++", "++", "++", "--", "--", "--", "++", "++", "--"]
+>>> n1.repr_in_base(64, mode='s') # 'mode' is 's' by default
+'30V'
+>>> n1.repr_in_base(2, digits=['--', '++'], mode='l')
+['++', '++', '--', '--', '--', '--', '--', '--', '++', '++', '++', '--', '--', '++']
 ```
 
 ## TODO
