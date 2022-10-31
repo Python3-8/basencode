@@ -152,3 +152,8 @@ class Number:
     __hash__ = get_int_method('__hash__', convert_to_number=False)
     __mod__ = get_int_method('__mod__')
     __divmod__ = get_int_method('__divmod__')
+    __rshift__ = get_int_method('__rshift__')
+    __lshift__ = get_int_method('__lshift__')
+    __and__ = get_int_method('__and__')
+    __or__ = get_int_method('__or__')
+    __ceil__ = get_int_method('__ceil__')
