@@ -1,50 +1,51 @@
 from string import ascii_letters, digits, punctuation
-
 from basencode import *
 
 
 def test_number_creation_and_conversion():
     n1 = Number(12345)
-    assert n1.repr_in_base(64) == "30V"
-    assert n1.repr_in_base(8) == "30071"
-    assert n1.to_octal() == "30071"
-    assert n1.repr_in_base(2) == "11000000111001"
-    assert n1.repr_in_base(33) == "bb3"
+    assert n1.repr_in_base(64) == '30V'
+    assert n1.repr_in_base(8) == '30071'
+    assert n1.repr_in_octal() == '30071'
+    assert n1.repr_in_base(2) == '11000000111001'
+    assert n1.repr_in_base(33) == 'bb3'
     # Construct number from another base
-    n2 = Number("30V", 64)
+    n2 = Number('30V', 64)
     assert n1._dec_value == n2._dec_value
 
 
 def test_different_modes():
     n1 = Number(12345)
-    assert n1.repr_in_base(64, mode="s") == "30V"
-    assert n1.repr_in_base(64, mode="l") == ["3", "0", "V"]
-    assert n1.repr_in_base(2, mode="l") == ["1", "1", "0", "0", "0", "0", "0", "0", "1", "1", "1", "0", "0", "1"]
-    assert n1.repr_in_base(2, digits=["++", "--"], mode="l") == [
-        "--",
-        "--",
-        "++",
-        "++",
-        "++",
-        "++",
-        "++",
-        "++",
-        "--",
-        "--",
-        "--",
-        "++",
-        "++",
-        "--",
+    assert n1.repr_in_base(64, mode='s') == '30V'
+    assert n1.repr_in_base(64, mode='l') == ['3', '0', 'V']
+    assert n1.repr_in_base(2, mode='l') == [
+        '1', '1', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0', '0', '1']
+    assert n1.repr_in_base(2, digits=['++', '--'], mode='l') == [
+        '--',
+        '--',
+        '++',
+        '++',
+        '++',
+        '++',
+        '++',
+        '++',
+        '--',
+        '--',
+        '--',
+        '++',
+        '++',
+        '--',
     ]
 
 
 def test_digit_overriding():
     n1 = Number(12345)
     # Overriding digits
-    assert n1.repr_in_base(2, list("-+")) == "++------+++--+"
-    assert n1.repr_in_base(76, list(digits + ascii_letters + punctuation[:14])) == "2ax"
+    assert n1.repr_in_base(2, list('-+')) == '++------+++--+'
+    assert n1.repr_in_base(
+        76, list(digits + ascii_letters + punctuation[:14])) == '2ax'
     # The digits must now be stored
-    assert n1.repr_in_base(76) == "2ax"
+    assert n1.repr_in_base(76) == '2ax'
 
 
 def test_number_methods():
@@ -61,7 +62,7 @@ def test_number_methods():
     assert bool(n1) == True
 
 
-def test_compatability_with_ints():
+def test_compatibility_with_ints():
     n1 = Number(12345)
     assert n1 == 12345
     assert n1 + 54321 == Number(66666)
