@@ -1,4 +1,4 @@
-# basencode
+# basencode [![Downloads](https://static.pepy.tech/personalized-badge/basencode?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Total%20downloads)](https://pepy.tech/project/basencode)
 
 Convert numbers of any base back and forth.
 
