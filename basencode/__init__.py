@@ -6,7 +6,7 @@ __name__ = 'basencode'
 __all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'Integer'
 
 ALL_DIGITS = f'{digits}{ascii_letters}+/'
-BASE_DIGITS: Dict[int, List[str]] = {1: ['1']}
+BASE_DIGITS: Dict[int, List[str]] = {1: ['0']}
 RADIX_POINT = '.'
 
 for i in range(2, 65):
@@ -46,12 +46,6 @@ class Integer:
 
     def __init__(self, n: Union[int, str, Tuple[Union[int, str]], List[Union[int, str]]],
                  base: int = 10, digits: List[str] = []) -> None:
-        if base == 10:
-            self._dec_value = int(n) if type(
-                n) == str else int(''.join(str(el) for el in n))
-            if int(n) < 0:
-                raise ValueError('n must be positive')
-            return
         if type(n) in (int, str):
             n = list(str(n))
         else:
@@ -131,20 +125,20 @@ class Integer:
     def __repr__(self):
         return f'{type(self).__name__}({self._dec_value})'
 
-    def repr_in_dec(self) -> int:
-        return self._dec_value
+    def repr_in_dec(self, mode: str = 's') -> Union[str, list]:
+        return self.repr_in_base(10, mode=mode)
 
-    def repr_in_bin(self) -> str:
-        return self.repr_in_base(2)
+    def repr_in_bin(self, mode: str = 's') -> Union[str, list]:
+        return self.repr_in_base(2, mode=mode)
 
-    def repr_in_octal(self) -> str:
-        return self.repr_in_base(8)
+    def repr_in_octal(self, mode: str = 's') -> Union[str, list]:
+        return self.repr_in_base(8, mode=mode)
 
-    def repr_in_hex(self) -> str:
-        return self.repr_in_base(16)
+    def repr_in_hex(self, mode: str = 's') -> Union[str, list]:
+        return self.repr_in_base(16, mode=mode)
 
-    def repr_in_base64(self) -> str:
-        return self.repr_in_base(64)
+    def repr_in_base64(self, mode: str = 's') -> Union[str, list]:
+        return self.repr_in_base(64, mode=mode)
 
     @property
     def dec_value(self) -> int:

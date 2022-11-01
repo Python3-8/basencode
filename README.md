@@ -65,9 +65,8 @@ Integer(66666)
 
 ## TODO
 
-- Add support for `float`s
-- Retain all default digits during arithmetic operations
-- Convert to base 10 even when provided base 10 in `Integer.__init__`
+1. Add support for `float`s
+2. Retain all default digits during arithmetic operations
 
 ## Documentation
 
@@ -87,13 +86,13 @@ Integer(66666)
 
 #### Class Methods
 
-- `__init__(self, n: Union[int, str], base: int = 10, digits: List[str] = []) -> None`: Takes `n` (`str` preferred, `int` is okay if `base` is `10`) and converts it from `base` (`int`) to decimal and stores in `Integer._dec_value`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `repr_in_base(self, base: int, digits: List[str] = []) -> str`: Converts `Integer._dec_value` to `base` (`int`), and returns a `str`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `repr_in_dec(self) -> int`: Returns `Integer._dec_value`
-- `repr_in_bin(self) -> str`: Uses `Integer.repr_in_base` to convert `Integer._dec_value` to binary
-- `repr_in_octal(self) -> str`: Uses `Integer.repr_in_base` to convert `Integer._dec_value` to octal
-- `repr_in_hex(self) -> str`: Uses `Integer.repr_in_base` to convert `Integer._dec_value` to hexadecimal
-- `repr_in_base64(self) -> str`: Uses `Integer.repr_in_base` to convert `Integer._dec_value` to base 64
+- `__init__(self, n: Union[int, str, Tuple[Union[int, str]], base: int = 10, digits: List[str] = []) -> None`: Takes `n`, converts it from `base` (`int`) to decimal, stores in `Integer._dec_value`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `repr_in_base(self, base: int, digits: List[str] = [], mode: str = 's') -> Union[str, list]`: Converts `Integer._dec_value` to `base` (`int`), and returns the result as a a `str` if `mode` (`int`) is `'s'`, or a `list` if `mode` is `'l'`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `repr_in_dec(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(10, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_bin(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(2, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_octal(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(8, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_hex(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(16, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_base64(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(64, mode=mode)` (see `Integer.repr_in_base`)
 
 ## Things to Note
 
