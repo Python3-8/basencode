@@ -73,7 +73,7 @@ Integer(66666)
 ### Global Variables
 
 - `ALL_DIGITS`: `str` of all digits used in default digits
-- `BASE_DIGITS`: `Dict[int, List[str]]` of all default digits for bases 1-64
+- `BASE_DIGITS`: `dict[int, list[str]]` of all default digits for bases 1-64
 
 ### Classes
 
@@ -81,18 +81,18 @@ Integer(66666)
 
 #### Class Properties
 
-- `base_digits`: `Dict[int, List[str]]` of all default digits for the `Integer`, updated by `Integer._get_digits`
+- `base_digits`: `dict[int, list[str]]` of all default digits for the `Integer`, updated by `Integer._get_digits`
 - `dec_value -> int`: This getter returns the decimal value of the `Integer` as an `int` which is stored in `Integer._dec_value`
 
 #### Class Methods
 
-- `__init__(self, n: Union[int, str, Tuple[Union[int, str]], base: int = 10, digits: List[str] = []) -> None`: Takes `n`, converts it from `base` (`int`) to decimal, stores in `Integer._dec_value`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `repr_in_base(self, base: int, digits: List[str] = [], mode: str = 's') -> Union[str, list]`: Converts `Integer._dec_value` to `base` (`int`), and returns the result as a a `str` if `mode` (`int`) is `'s'`, or a `list` if `mode` is `'l'`; `digits` (`List[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `repr_in_dec(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(10, mode=mode)` (see `Integer.repr_in_base`)
-- `repr_in_bin(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(2, mode=mode)` (see `Integer.repr_in_base`)
-- `repr_in_octal(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(8, mode=mode)` (see `Integer.repr_in_base`)
-- `repr_in_hex(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(16, mode=mode)` (see `Integer.repr_in_base`)
-- `repr_in_base64(self, mode: str = 's') -> Union[str, list]`: Returns `repr_in_base(64, mode=mode)` (see `Integer.repr_in_base`)
+- `__init__(self, n: int | str | tuple[int | str], base: int = 10, digits: list[str] = []) -> None`: Takes `n`, converts it from `base` (`int`) to decimal, stores in `Integer._dec_value`; `digits` (`list[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `repr_in_base(self, base: int, digits: list[str] = [], mode: str = 's') -> str | list`: Converts `Integer._dec_value` to `base` (`int`), and returns the result as a a `str` if `mode` (`int`) is `'s'`, or a `list` if `mode` is `'l'`; `digits` (`list[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `repr_in_dec(self, mode: str = 's') -> str | list`: Returns `repr_in_base(10, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_bin(self, mode: str = 's') -> str | list`: Returns `repr_in_base(2, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_octal(self, mode: str = 's') -> str | list`: Returns `repr_in_base(8, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_hex(self, mode: str = 's') -> str | list`: Returns `repr_in_base(16, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_base64(self, mode: str = 's') -> str | list`: Returns `repr_in_base(64, mode=mode)` (see `Integer.repr_in_base`)
 
 ## Things to Note
 
