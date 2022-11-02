@@ -42,7 +42,7 @@ Integer(66666)
 Integer(41976)
 >>> n1 * n2
 Integer(670592745)
-# Both true and floor division return an Integer and perform the same functionality (as of now)
+# True division will return a Float, and floor division an Integer
 >>> n2 / n1
 Float(4.400243013365737)
 >>> n2 // n1
@@ -62,7 +62,7 @@ Integer(66666)
 >>> n1.repr_in_base(2, digits=['--', '++'], mode='l')
 ['++', '++', '--', '--', '--', '--', '--', '--', '++', '++', '++', '--', '--', '++']
 # Floats can be converted back and forth too
->>> Float(10.1, 2)
+>>> Number(10.1, 2) # Constructs a Float
 Float(2.5)
 >>> Float(10.1, 2).repr_in_base(8)
 '2.4'
