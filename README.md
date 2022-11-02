@@ -72,8 +72,7 @@ Float(2.5)
 
 ## TODO
 
-1. Retain all default digits during arithmetic operations
-2. (In the distant future) Use `decimal.Decimal`s in `Float`s to reduce miscalculation
+1. Use `decimal.Decimal`s in `Float`s to reduce miscalculation
 
 ## Documentation
 
