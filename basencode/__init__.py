@@ -51,6 +51,8 @@ class Number:
                 base: int = 10, digits: List[str] = [], radix_point: str = RADIX_POINT):
         if isinstance(n, int) or isinstance(n, float):
             n_ = str(n)
+        else:
+            n_ = n
         if radix_point in n_:
             return Float(n, base, digits, radix_point)
         else:
