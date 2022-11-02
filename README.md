@@ -10,12 +10,12 @@ To install `basencode`, run `python3 -m pip install basencode`. Now you should b
 
 ```py
 >>> from basencode import *
->>> n1 = Integer(12345)
+>>> n1 = Number(12345) # Number constructs an Integer (in this case), Integer can be called too
 # Default digits are used
 >>> n1.repr_in_base(64)
 '30V'
 # Construct Integer from base 64
->>> Integer('30V', 64)
+>>> Number('30V', 64)
 Integer(12345)
 >>> n1.repr_in_base(8)
 '30071'
@@ -44,7 +44,7 @@ Integer(41976)
 Integer(670592745)
 # Both true and floor division return an Integer and perform the same functionality (as of now)
 >>> n2 / n1
-Integer(4)
+Float(4.400243013365737)
 >>> n2 // n1
 Integer(4)
 >>> n2 % n1
@@ -61,13 +61,19 @@ Integer(66666)
 '30V'
 >>> n1.repr_in_base(2, digits=['--', '++'], mode='l')
 ['++', '++', '--', '--', '--', '--', '--', '--', '++', '++', '++', '--', '--', '++']
+# Floats can be converted back and forth too
+>>> Float(10.1, 2)
+Float(2.5)
+>>> Float(10.1, 2).repr_in_base(8)
+'2.4'
+>>> Float(22.22, 3).repr_in_base(7)
+'11.613613613613613611501...'
 ```
 
 ## TODO
 
 1. Retain all default digits during arithmetic operations
-2. Overload operators on `Float` class
-3. Support returning `Float`s from operations on `Integer`s
+2. (In the distant future) Use `decimal.Decimal`s in `Float`s to reduce miscalculation
 
 ## Documentation
 
@@ -76,6 +82,11 @@ Integer(66666)
 - `ALL_DIGITS`: `str` of all digits used in default digits
 - `BASE_DIGITS`: `dict[int, list[str]]` of all default digits for bases 1-64
 - `RADIX_POINT`: `str` - the default radix point for `Float`s
+
+### Number class
+
+The `Number` class is a sort of wrapper that creates an `Integer` or a `Float`
+depending on the number provided.
 
 ### Integer class
 
@@ -121,4 +132,4 @@ Integer(66666)
   - Uppercase alphabet
   - `+` and `/`
 
-  therefore, `Integer('DF', 16)` without overriding the digits for base 16 will throw an error because hexadecimal only has the digits 0-f (**lowercase** "f"). `Integer('df', 16)` will construct `Integer(223)`.
+  therefore, `Number('DF', 16)` without overriding the digits for base 16 will throw an error because hexadecimal only has the digits 0-f (**lowercase** "f"). `Number('df', 16)` will construct `Integer(223)`.
