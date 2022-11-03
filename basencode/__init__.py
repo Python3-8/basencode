@@ -1,7 +1,9 @@
 from typing import Dict, List, Tuple, Union
 from string import ascii_letters, digits
+from decimal import Decimal
 from copy import deepcopy
 from math import isclose
+import math
 
 __name__ = 'basencode'
 __all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'RADIX_POINT', 'Integer', 'Float', 'Number'
@@ -9,38 +11,57 @@ __all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'RADIX_POINT', 'Integer', 'Float', 'Numbe
 ALL_DIGITS = f'{digits}{ascii_letters}+/'
 BASE_DIGITS: Dict[int, List[str]] = {2: ['0', '1']}
 RADIX_POINT = '.'
-
-_INT_FUNCS = dir(int)
-_FLOAT_FUNCS = dir(float)
+_NUM_METHODS = {
+    '__eq__': lambda self, other: self == other,
+    '__bool__': lambda self: bool(self),
+    '__abs__': lambda self: abs(self),
+    '__add__': lambda self, other: self + other,
+    '__sub__': lambda self, other: self - other,
+    '__mul__': lambda self, other: self * other,
+    '__truediv__': lambda self, other: self / other,
+    '__floordiv__': lambda self, other: self // other,
+    '__pow__': lambda self, other: self ** other,
+    '__hash__': lambda self: hash(self),
+    '__mod__': lambda self, other: self % other,
+    '__divmod__': lambda self, other: divmod(self, other),
+    '__rshift__': lambda self, other: self >> other,
+    '__lshift__': lambda self, other: self << other,
+    '__and__': lambda self, other: self & other,
+    '__or__': lambda self, other: self | other,
+    '__ceil__': lambda self: math.ceil(self),
+    '__round__': lambda self, ndigits: round(self, ndigits),
+}
 
 for i in range(3, 65):
     BASE_DIGITS[i] = BASE_DIGITS[i - 1] + [ALL_DIGITS[i - 1]]
 
 
 def get_num_method(method_name, cls, convert_to_number=True):
-    if method_name not in _INT_FUNCS and method_name not in _FLOAT_FUNCS:
-        raise AttributeError(f'{method_name} is not a valid function')
-    num_method = getattr(cls, method_name)
+    num_method = _NUM_METHODS.get(method_name)
+    if not num_method:
+        raise AttributeError(f'{method_name} is not a valid method')
 
     def convert_from_int_and_call(self, other=None):
         TYPE_DICTIONARY = {
             int: Integer if convert_to_number else int,
             float: Float if convert_to_number else float,
+            Decimal: None,
             bool: bool,
         }
         if other:
             if isinstance(other, _Number):
                 val = num_method(self._dec_value, other._dec_value)
+            elif isinstance(other, Decimal):
+                val = num_method(Decimal(str(self._dec_value)), other)
             else:
                 val = num_method(self._dec_value, other)
         else:
             val = num_method(self._dec_value)
         t = TYPE_DICTIONARY[type(val) if type(val) != tuple else type(val[0])]
-
         if isinstance(val, tuple):
             return tuple(t(el) for el in val)
-        elif t == int and not convert_to_number:
-            return val
+        elif isinstance(val, Decimal):
+            return (new_type := Float if val % Decimal('1') else Integer)(str(val) if new_type == Float else str(int(val)))
         return t(val)
 
     return convert_from_int_and_call
