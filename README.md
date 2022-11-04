@@ -1,4 +1,4 @@
-# basencode [![Downloads](https://static.pepy.tech/personalized-badge/basencode?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Total%20downloads)](https://pepy.tech/project/basencode)
+# basencode [![Total downloads](https://static.pepy.tech/personalized-badge/basencode?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Total%20downloads)](https://pepy.tech/project/basencode)
 
 Convert numbers of any base back and forth.
 
@@ -44,7 +44,7 @@ Integer(41976)
 Integer(670592745)
 # True division will return a Float, and floor division an Integer
 >>> n2 / n1
-Float(4.400243013365737)
+Float(4.400243013365735)
 >>> n2 // n1
 Integer(4)
 >>> n2 % n1
@@ -67,7 +67,7 @@ Float(2.5)
 >>> Float(10.1, 2).repr_in_base(8)
 '2.4'
 >>> Float(22.22, 3).repr_in_base(7)
-'11.613613613613613611501...'
+'11.6136136136136136136136136136136125043055...'
 ```
 
 ## TODO
@@ -97,12 +97,12 @@ depending on the number provided.
 #### Class Methods
 
 - `__init__(self, n: int | str | tuple[int | str], base: int = 10, digits: list[str] = []) -> None`: Takes `n`, converts it from `base` (`int`) to decimal, stores in `Integer._dec_value`; `digits` (`list[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `repr_in_base(self, base: int, digits: list[str] = [], mode: str = 's') -> str | list[str]`: Converts `Integer._dec_value` to `base` (`int`), and returns the result as a a `str` if `mode` (`int`) is `'s'`, or a `list` if `mode` is `'l'`; `digits` (`list[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `repr_in_dec(self, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(10, mode=mode)` (see `Integer.repr_in_base`)
-- `repr_in_bin(self, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(2, mode=mode)` (see `Integer.repr_in_base`)
-- `repr_in_octal(self, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(8, mode=mode)` (see `Integer.repr_in_base`)
-- `repr_in_hex(self, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(16, mode=mode)` (see `Integer.repr_in_base`)
-- `repr_in_base64(self, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(64, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_base(self, base: int, digits: list[str] = None, mode: str = 's') -> str | list[str]`: Converts `Integer._dec_value` to `base` (`int`), and returns the result as a a `str` if `mode` (`int`) is `'s'`, or a `list` if `mode` is `'l'`; `digits` (`list[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `repr_in_dec(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(10, digits=digits, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_bin(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(2, digits=digits, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_octal(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(8, digits=digits, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_hex(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(16, digits=digits, mode=mode)` (see `Integer.repr_in_base`)
+- `repr_in_base64(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(64, digits=digits, mode=mode)` (see `Integer.repr_in_base`)
 
 ### Float class
 
@@ -114,12 +114,12 @@ depending on the number provided.
 #### Class Methods
 
 - `__init__(self, n: int | str | tuple[int | str], base: int = 10, digits: list[str] = [], radix_point: str = RADIX_POINT) -> None`: Takes `n`, converts it from `base` (`int`) to decimal, stores in `Float._dec_value`; `digits` (`list[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `repr_in_base(self, base: int, digits: list[str] = [], radix_point: str = RADIX_POINT, mode: str = 's') -> str | list[str]`: Converts `Float._dec_value` to `base` (`int`), and returns the result as a a `str` if `mode` (`int`) is `'s'`, or a `list` if `mode` is `'l'`; `digits` (`list[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
-- `repr_in_dec(self, radix_point: str = RADIX_POINT, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(10, radix_point=radix_point, mode=mode)` (see `Float.repr_in_base`)
-- `repr_in_bin(self, radix_point: str = RADIX_POINT, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(2, radix_point=radix_point, mode=mode)` (see `Float.repr_in_base`)
-- `repr_in_octal(self, radix_point: str = RADIX_POINT, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(8, radix_point=radix_point, mode=mode)` (see `Float.repr_in_base`)
-- `repr_in_hex(self, radix_point: str = RADIX_POINT, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(16, radix_point=radix_point, mode=mode)` (see `Float.repr_in_base`)
-- `repr_in_base64(self, radix_point: str = RADIX_POINT, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(64, radix_point=radix_point, mode=mode)` (see `Float.repr_in_base`)
+- `repr_in_base(self, base: int, digits: list[str] = None, mode: str = 's', max_frac_places: int = 100) -> str | list[str]`: Converts `Float._dec_value` to `base` (`int`), and returns the result as a a `str` if `mode` (`int`) is `'s'`, or a `list` if `mode` is `'l'`; `digits` (`list[str]`) is required if `base` does not have default digits (see `BASE_DIGITS`)
+- `repr_in_dec(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(10, digits=digits, mode=mode)` (see `Float.repr_in_base`)
+- `repr_in_bin(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(2, digits=digits, mode=mode)` (see `Float.repr_in_base`)
+- `repr_in_octal(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(8, digits=digits, mode=mode)` (see `Float.repr_in_base`)
+- `repr_in_hex(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(16, digits=digits, mode=mode)` (see `Float.repr_in_base`)
+- `repr_in_base64(self, digits: List[str] = None, mode: str = 's') -> str | list[str]`: Returns `repr_in_base(64, digits=digits, mode=mode)` (see `Float.repr_in_base`)
 
 ## Things to Note
 

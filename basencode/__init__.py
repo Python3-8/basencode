@@ -63,7 +63,7 @@ def get_num_method(method_name, convert_to_number=True):
                 val = num_method(self.dec_value, other)
         else:
             val = num_method(self.dec_value)
-        t = TYPE_DICT[type(val) if isinstance(
+        t = TYPE_DICT[type(val) if not isinstance(
             val, tuple) else type(val[0])]
         if isinstance(val, tuple):
             return tuple(Float(el) for el in val) if t == Decimal else tuple(t(el) for el in val)
@@ -151,25 +151,25 @@ class _Number:
         dupl_add = dupl.add
         return [x for x in l if not (x in dupl or dupl_add(x))]
 
-    def repr_in_dec(self, mode: str = 's') -> Union[str, List[str]]:
+    def repr_in_dec(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
         """Uses `repr_in_base` to convert the `_Number` to decimal."""
-        return self.repr_in_base(10, mode=mode)
+        return self.repr_in_base(10, digits=digits, mode=mode)
 
-    def repr_in_bin(self, mode: str = 's') -> Union[str, List[str]]:
+    def repr_in_bin(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
         """Uses `repr_in_base` to convert the `_Number` to binary."""
-        return self.repr_in_base(2, mode=mode)
+        return self.repr_in_base(2, digits=digits, mode=mode)
 
-    def repr_in_octal(self, mode: str = 's') -> Union[str, List[str]]:
+    def repr_in_octal(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
         """Uses `repr_in_base` to convert the `_Number` to octal."""
-        return self.repr_in_base(8, mode=mode)
+        return self.repr_in_base(8, digits=digits, mode=mode)
 
-    def repr_in_hex(self, mode: str = 's') -> Union[str, List[str]]:
+    def repr_in_hex(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
         """Uses `repr_in_base` to convert the `_Number` to hexadecimal."""
-        return self.repr_in_base(16, mode=mode)
+        return self.repr_in_base(16, digits=digits, mode=mode)
 
-    def repr_in_base64(self, mode: str = 's') -> Union[str, List[str]]:
+    def repr_in_base64(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
         """Uses `repr_in_base` to convert the `_Number` to base 64."""
-        return self.repr_in_base(64, mode=mode)
+        return self.repr_in_base(64, digits=digits, mode=mode)
 
     @property
     def dec_value(self) -> Union[int, float, Decimal]:
@@ -251,12 +251,12 @@ class Float(_Number):
     def repr_in_base(self, base: int, digits: List[str] = None, mode: str = 's',
                      max_frac_places: int = 100) -> Union[str, List[str]]:
         """
-        Represent the `Float` in the base provided in the integer `base`. The
-        `digits: list[str]` parameter can be used to represent the `Number` in
-        `base` using a specific set of digits. The `mode: str` parameter
-        indicates  whether the final representation will be returned as a `str`
-        or a `list` (see `README.md` for use cases; `'s'` means string and
-        `'l'` list).
+        Represent the `Float` in the base provided in the integer `base` with a
+        maximum of `max_frac_places` fractional places. The`digits: list[str]`
+        parameter can be used to represent the `Number` in `base` using a
+        specific set of digits. The `mode: str` parameter indicates whether the
+        final representation will be returned as a `str` or a `list` (see
+        `README.md` for use cases; `'s'` means string and `'l'` list).
         """
         digits = digits if digits else []
         whole_part = int(self._dec_value)
