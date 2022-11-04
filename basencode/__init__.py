@@ -30,13 +30,15 @@ _NUM_METHODS = {
     '__or__': lambda self, other: self | other,
     '__ceil__': lambda self: math.ceil(self),
     '__round__': lambda self, ndigits: round(self, ndigits),
+    '__int__': lambda self: int(self),
+    '__float__': lambda self: float(self),
 }
 
 for i in range(3, 65):
     BASE_DIGITS[i] = BASE_DIGITS[i - 1] + [ALL_DIGITS[i - 1]]
 
 
-def get_num_method(method_name, cls, convert_to_number=True):
+def get_num_method(method_name, convert_to_number=True):
     num_method = _NUM_METHODS.get(method_name)
     if not num_method:
         raise AttributeError(f'{method_name} is not a valid method')
@@ -45,7 +47,7 @@ def get_num_method(method_name, cls, convert_to_number=True):
         TYPE_DICTIONARY = {
             int: Integer if convert_to_number else int,
             float: Float if convert_to_number else float,
-            Decimal: None,
+            Decimal: Decimal,
             bool: bool,
         }
         if other:
@@ -59,7 +61,7 @@ def get_num_method(method_name, cls, convert_to_number=True):
             val = num_method(self._dec_value)
         t = TYPE_DICTIONARY[type(val) if type(val) != tuple else type(val[0])]
         if isinstance(val, tuple):
-            return tuple(t(el) for el in val)
+            return tuple(Float(el) for el in val) if t == Decimal else tuple(t(el) for el in val)
         elif isinstance(val, Decimal):
             return (new_type := Float if val % Decimal('1') else Integer)(str(val) if new_type == Float else str(int(val)))
         return t(val)
@@ -85,7 +87,7 @@ class _Number:
 
     def __init__(self, n: Union[int, float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                  base: int = 10, digits: List[str] = []):
-        if type(n) in (int, str, float):
+        if type(n) in (int, str, float, Decimal):
             n = list(str(n))
         else:
             n = [str(el) for el in n]
@@ -98,18 +100,19 @@ class _Number:
         if hasattr(self, 'radix_point'):
             radindex = n.index(self.radix_point)
             frac_part = n[radindex + 1:]
-        int_part = n[:radindex]
-        place: int = len(int_part)
+        whole_part = n[:radindex]
+        place: int = len(whole_part)
         num: int = 0
         while place:
-            num += digits_.index(int_part[::-1]
+            num += digits_.index(whole_part[::-1]
                                  [place - 1]) * base ** (place - 1)
             place -= 1
         place -= 1
         for digit in frac_part:
-            num += digits_.index(digit) * base ** place
+            num += Decimal(digits_.index(digit)) * \
+                Decimal(base) ** Decimal(place)
             place -= 1
-        self._dec_value: Union[int, float] = num
+        self._dec_value: Union[int, float, Decimal] = num
 
     def __repr__(self):
         return f'{type(self).__name__}({self._dec_value})'
@@ -154,7 +157,7 @@ class _Number:
         return self.repr_in_base(64, mode=mode)
 
     @property
-    def dec_value(self) -> Union[int, float]:
+    def dec_value(self) -> Union[int, float, Decimal]:
         return self._dec_value
 
     def repr_in_base(self, base: int, digits: List[str] = [], mode: str = 's') -> Union[str, List[str]]:
@@ -173,7 +176,7 @@ class _Number:
         if base < 2:
             raise ValueError(f'base must be greater than 1, got {base}')
         elif self._dec_value == 0:
-            return digits_[0]
+            return digits_[0] if mode == 's' else [digits_[0]]
         place: int = 0
         while True:
             if base ** place <= self._dec_value and base ** (place + 1) > self._dec_value:
@@ -193,37 +196,39 @@ class _Number:
         new_digits += digits_[0] * place
         return new_digits if mode == 'l' else ''.join(new_digits)
 
+    __eq__ = get_num_method('__eq__')
+    __bool__ = get_num_method('__bool__')
+    __abs__ = get_num_method('__abs__', False)
+    __add__ = get_num_method('__add__')
+    __sub__ = get_num_method('__sub__')
+    __mul__ = get_num_method('__mul__')
+    __truediv__ = get_num_method('__truediv__')
+    __floordiv__ = get_num_method('__floordiv__')
+    __pow__ = get_num_method('__pow__')
+    __hash__ = get_num_method('__hash__', False)
+    __mod__ = get_num_method('__mod__')
+    __divmod__ = get_num_method('__divmod__')
+    __or__ = get_num_method('__or__')
+    __ceil__ = get_num_method('__ceil__')
+    __round__ = get_num_method('__round__')
+    __int__ = get_num_method('__int__', False)
+    __float__ = get_num_method('__float__', False)
+
 
 class Integer(_Number):
-    __eq__ = get_num_method('__eq__', int)
-    __bool__ = get_num_method('__bool__', int)
-    __abs__ = get_num_method('__abs__', int, False)
-    __add__ = get_num_method('__add__', int)
-    __sub__ = get_num_method('__sub__', int)
-    __mul__ = get_num_method('__mul__', int)
-    __truediv__ = get_num_method('__truediv__', int)
-    __floordiv__ = get_num_method('__floordiv__', int)
-    __pow__ = get_num_method('__pow__', int)
-    __hash__ = get_num_method('__hash__', int, False)
-    __mod__ = get_num_method('__mod__', int)
-    __divmod__ = get_num_method('__divmod__', int)
-    __rshift__ = get_num_method('__rshift__', int)
-    __lshift__ = get_num_method('__lshift__', int)
-    __and__ = get_num_method('__and__', int)
-    __or__ = get_num_method('__or__', int)
-    __ceil__ = get_num_method('__ceil__', int)
-    __round__ = get_num_method('__round__', int)
+    pass
 
 
 class Float(_Number):
     def __init__(self, n: Union[float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                  base: int = 10, digits: List[str] = [], radix_point: str = RADIX_POINT):
         if radix_point not in str(n):
-            raise ValueError(f'{n}, a float, does not have a radix point')
+            n = str(n) + radix_point
         self.radix_point = radix_point
         super().__init__(n, base, digits)
 
-    def repr_in_base(self, base: int, digits: List[str] = [], mode: str = 's') -> Union[str, List[str]]:
+    def repr_in_base(self, base: int, digits: List[str] = [], mode: str = 's',
+                     max_frac_places: int = 100) -> Union[str, List[str]]:
         """
         Represent the `Float` in the base provided in the integer `base`. The
         `digits: list[str]` parameter can be used to represent the `Number` in 
@@ -238,14 +243,16 @@ class Float(_Number):
         # fractional part
         new_digits += self.radix_point
         place = -1
-        remaining: float = self._dec_value - whole_part
-        while remaining:
-            if base ** place > remaining:
+        remaining: Decimal = self._dec_value - Decimal(whole_part)
+        while remaining and len(new_digits[new_digits.index(self.radix_point) + 1:]
+                                ) < max_frac_places:
+            if Decimal(base) ** Decimal(place) > remaining:
                 new_digits.append(digits_[0])
             else:
-                new_digit = int(remaining / (base ** place))
+                new_digit = int(remaining / Decimal(base) ** Decimal(place))
                 new_digits.append(digits_[new_digit])
-                remaining -= new_digit * base ** place
+                remaining -= Decimal(new_digit) * \
+                    Decimal(base) ** Decimal(place)
             if remaining:
                 place -= 1
         new_digits += digits_[0] * place
@@ -256,19 +263,4 @@ class Float(_Number):
     def __eq__(self, other) -> bool:
         if isinstance(other, _Number):
             other = other._dec_value
-        return isclose(self._dec_value, other, rel_tol=1e-6)
-
-    __bool__ = get_num_method('__bool__', float)
-    __abs__ = get_num_method('__abs__', float, False)
-    __add__ = get_num_method('__add__', float)
-    __sub__ = get_num_method('__sub__', float)
-    __mul__ = get_num_method('__mul__', float)
-    __truediv__ = get_num_method('__truediv__', float)
-    __floordiv__ = get_num_method('__floordiv__', float)
-    __pow__ = get_num_method('__pow__', float)
-    __hash__ = get_num_method('__hash__', float, False)
-    __mod__ = get_num_method('__mod__', float)
-    __divmod__ = get_num_method('__divmod__', float)
-    __or__ = get_num_method('__or__', float)
-    __ceil__ = get_num_method('__ceil__', float)
-    __round__ = get_num_method('__round__', float)
+        return isclose(float(self._dec_value), other, rel_tol=1e-6)

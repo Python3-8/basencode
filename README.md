@@ -72,7 +72,7 @@ Float(2.5)
 
 ## TODO
 
-1. Use `decimal.Decimal`s in `Float`s to reduce miscalculation
+There are no TODOs currently.
 
 ## Documentation
 
