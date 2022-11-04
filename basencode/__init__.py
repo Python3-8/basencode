@@ -1,14 +1,16 @@
+"""The `basencode` library, converting numbers to and from number systems since
+June 2022."""
+
 from typing import Dict, List, Tuple, Union
-from string import ascii_letters, digits
+from string import ascii_letters, digits as string_digits
 from decimal import Decimal
 from copy import deepcopy
 from math import isclose
 import math
 
-__name__ = 'basencode'
 __all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'RADIX_POINT', 'Integer', 'Float', 'Number'
 
-ALL_DIGITS = f'{digits}{ascii_letters}+/'
+ALL_DIGITS = f'{string_digits}{ascii_letters}+/'
 BASE_DIGITS: Dict[int, List[str]] = {2: ['0', '1']}
 RADIX_POINT = '.'
 _NUM_METHODS = {
@@ -39,12 +41,14 @@ for i in range(3, 65):
 
 
 def get_num_method(method_name, convert_to_number=True):
+    """Gets a built-in Python method and modifies it for overloading operators
+    in `_Number` and its children."""
     num_method = _NUM_METHODS.get(method_name)
     if not num_method:
         raise AttributeError(f'{method_name} is not a valid method')
 
     def convert_from_int_and_call(self, other=None):
-        TYPE_DICTIONARY = {
+        TYPE_DICT = {
             int: Integer if convert_to_number else int,
             float: Float if convert_to_number else float,
             Decimal: Decimal,
@@ -52,26 +56,30 @@ def get_num_method(method_name, convert_to_number=True):
         }
         if other:
             if isinstance(other, _Number):
-                val = num_method(self._dec_value, other._dec_value)
+                val = num_method(self.dec_value, other.dec_value)
             elif isinstance(other, Decimal):
-                val = num_method(Decimal(str(self._dec_value)), other)
+                val = num_method(Decimal(str(self.dec_value)), other)
             else:
-                val = num_method(self._dec_value, other)
+                val = num_method(self.dec_value, other)
         else:
-            val = num_method(self._dec_value)
-        t = TYPE_DICTIONARY[type(val) if type(val) != tuple else type(val[0])]
+            val = num_method(self.dec_value)
+        t = TYPE_DICT[type(val) if isinstance(
+            val, tuple) else type(val[0])]
         if isinstance(val, tuple):
             return tuple(Float(el) for el in val) if t == Decimal else tuple(t(el) for el in val)
         elif isinstance(val, Decimal):
-            return (new_type := Float if val % Decimal('1') else Integer)(str(val) if new_type == Float else str(int(val)))
+            return (new_type := Float if val % Decimal('1')
+                    else Integer)(str(val) if new_type == Float else str(int(val)))
         return t(val)
 
     return convert_from_int_and_call
 
 
 class Number:
+    """Constructs a `Float` if a number with a radix point is provided, otherwise an `Integer`."""
     def __new__(cls, n: Union[int, float, str, Tuple[Union[int, str]], List[Union[int, str]]],
-                base: int = 10, digits: List[str] = [], radix_point: str = RADIX_POINT):
+                base: int = 10, digits: List[str] = None, radix_point: str = RADIX_POINT):
+        digits = digits if digits else []
         if isinstance(n, int) or isinstance(n, float):
             n_ = str(n)
         else:
@@ -86,7 +94,8 @@ class _Number:
     """The parent class for all numbers."""
 
     def __init__(self, n: Union[int, float, str, Tuple[Union[int, str]], List[Union[int, str]]],
-                 base: int = 10, digits: List[str] = []):
+                 base: int = 10, digits: List[str] = None):
+        digits = digits if digits else []
         if type(n) in (int, str, float, Decimal):
             n = list(str(n))
         else:
@@ -132,7 +141,8 @@ class _Number:
             self.base_digits[base] = digits_
         if len(digits_) != base:
             raise ValueError(
-                f'expected exactly {base} digits for base {base}, got {len(digits_)} after removing duplicates'
+                f'expected exactly {base} digits for base {base}, got '
+                f'{len(digits_)} after removing duplicates'
             )
         return digits_
 
@@ -142,33 +152,41 @@ class _Number:
         return [x for x in l if not (x in dupl or dupl_add(x))]
 
     def repr_in_dec(self, mode: str = 's') -> Union[str, List[str]]:
+        """Uses `repr_in_base` to convert the `_Number` to decimal."""
         return self.repr_in_base(10, mode=mode)
 
     def repr_in_bin(self, mode: str = 's') -> Union[str, List[str]]:
+        """Uses `repr_in_base` to convert the `_Number` to binary."""
         return self.repr_in_base(2, mode=mode)
 
     def repr_in_octal(self, mode: str = 's') -> Union[str, List[str]]:
+        """Uses `repr_in_base` to convert the `_Number` to octal."""
         return self.repr_in_base(8, mode=mode)
 
     def repr_in_hex(self, mode: str = 's') -> Union[str, List[str]]:
+        """Uses `repr_in_base` to convert the `_Number` to hexadecimal."""
         return self.repr_in_base(16, mode=mode)
 
     def repr_in_base64(self, mode: str = 's') -> Union[str, List[str]]:
+        """Uses `repr_in_base` to convert the `_Number` to base 64."""
         return self.repr_in_base(64, mode=mode)
 
     @property
     def dec_value(self) -> Union[int, float, Decimal]:
+        """Getter returns the decimal value of the `_Number`."""
         return self._dec_value
 
-    def repr_in_base(self, base: int, digits: List[str] = [], mode: str = 's') -> Union[str, List[str]]:
+    def repr_in_base(self, base: int, digits: List[str] = None, mode: str = 's') \
+            -> Union[str, List[str]]:
         """
         Represent the `Integer` in the base provided in the integer `base`. The
-        `digits: list[str]` parameter can be used to represent the `Number` in 
+        `digits: list[str]` parameter can be used to represent the `Number` in
         `base` using a specific set of digits. The `mode: str` parameter
         indicates  whether the final representation will be returned as a `str`
         or a `list` (see `README.md` for use cases; `'s'` means string and
         `'l'` list).
         """
+        digits = digits if digits else []
         if mode not in ('s', 'l'):
             raise ValueError(
                 f"expected mode to be either 's' or 'l', but got {mode}")
@@ -216,27 +234,31 @@ class _Number:
 
 
 class Integer(_Number):
-    pass
+    """`Integer` class, a child of `_Number`."""
 
 
 class Float(_Number):
+    """`Float` class, a child of the `_Number` class, using floating point numbers."""
+
     def __init__(self, n: Union[float, str, Tuple[Union[int, str]], List[Union[int, str]]],
-                 base: int = 10, digits: List[str] = [], radix_point: str = RADIX_POINT):
+                 base: int = 10, digits: List[str] = None, radix_point: str = RADIX_POINT):
+        digits = digits if digits else []
         if radix_point not in str(n):
             n = str(n) + radix_point
         self.radix_point = radix_point
         super().__init__(n, base, digits)
 
-    def repr_in_base(self, base: int, digits: List[str] = [], mode: str = 's',
+    def repr_in_base(self, base: int, digits: List[str] = None, mode: str = 's',
                      max_frac_places: int = 100) -> Union[str, List[str]]:
         """
         Represent the `Float` in the base provided in the integer `base`. The
-        `digits: list[str]` parameter can be used to represent the `Number` in 
+        `digits: list[str]` parameter can be used to represent the `Number` in
         `base` using a specific set of digits. The `mode: str` parameter
         indicates  whether the final representation will be returned as a `str`
         or a `list` (see `README.md` for use cases; `'s'` means string and
         `'l'` list).
         """
+        digits = digits if digits else []
         whole_part = int(self._dec_value)
         new_digits = Integer(whole_part).repr_in_base(base, mode='l')
         digits_: List[str] = self._get_digits(base, digits)
