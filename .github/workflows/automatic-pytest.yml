@@ -1,4 +1,4 @@
-name: Automatic Testing With Python
+name: Pytest testing
 on: [push]
 jobs:
   pytest:
