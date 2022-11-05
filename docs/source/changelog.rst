@@ -5,7 +5,7 @@ Version 2.0.0
 -------------
 
 * Added support for floating point numbers
-* Created a parent class for ``Integer``s and ``Float``\s, ``_Number``
+* Created a parent class for ``Integer``\s and ``Float``\s, ``_Number``
 * Overloaded more operators
 * Bugfixes
 
