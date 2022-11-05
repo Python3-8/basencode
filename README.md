@@ -1,4 +1,4 @@
-# basencode [![Total downloads](https://static.pepy.tech/personalized-badge/basencode?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Total%20downloads)](https://pepy.tech/project/basencode)
+# basencode [![Downloads](https://pepy.tech/badge/basencode)](https://pepy.tech/project/basencode) [![pytest testing](https://github.com/Python3-8/basencode/actions/workflows/automatic-pytest.yml/badge.svg)](https://github.com/Python3-8/basencode/actions/workflows/automatic-pytest.yml)
 
 Convert numbers of any base back and forth.
 
