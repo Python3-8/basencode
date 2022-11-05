@@ -48,7 +48,8 @@ for i in range(3, 65):
 
 
 def get_num_method(method_name, convert_to_number=True):
-    """Gets a built-in Python method and modifies it for overloading operators
+    """
+    Gets a built-in Python method and modifies it for overloading operators
     in ``_Number`` and its children.
 
     :param method_name: The name of the method
