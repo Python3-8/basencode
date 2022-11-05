@@ -6,5 +6,6 @@ API Reference
 
   globals
   number
+  _number
   integer
   float
