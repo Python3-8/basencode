@@ -3,11 +3,11 @@ Basencode
 =========
 """
 
-from typing import Dict, List, Tuple, Union
 from string import ascii_letters, digits as string_digits
+from typing import Dict, List, Tuple, Union
+from math import ceil, isclose
 from decimal import Decimal
 from copy import deepcopy
-from math import ceil, isclose
 
 __all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'RADIX_POINT', 'Integer', 'Float', 'Number'
 
