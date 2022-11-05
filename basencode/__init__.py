@@ -5,8 +5,7 @@ from typing import Dict, List, Tuple, Union
 from string import ascii_letters, digits as string_digits
 from decimal import Decimal
 from copy import deepcopy
-from math import isclose
-import math
+from math import ceil, isclose
 
 __all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'RADIX_POINT', 'Integer', 'Float', 'Number'
 
@@ -30,7 +29,7 @@ _NUM_METHODS = {
     '__lshift__': lambda self, other: self << other,
     '__and__': lambda self, other: self & other,
     '__or__': lambda self, other: self | other,
-    '__ceil__': lambda self: math.ceil(self),
+    '__ceil__': lambda self: ceil(self),
     '__round__': lambda self, ndigits: round(self, ndigits),
     '__int__': lambda self: int(self),
     '__float__': lambda self: float(self),
