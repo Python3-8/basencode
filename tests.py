@@ -12,7 +12,7 @@ def test_number_creation_and_conversion():
     assert n1.repr_in_base(33) == 'bb3'
     # Construct number from another base
     n2 = Integer('30V', 64)
-    assert n1._dec_value == n2._dec_value
+    assert n1.dec_value == n2.dec_value
 
 
 def test_different_modes():
@@ -62,6 +62,7 @@ def test_number_methods():
     assert abs(n1) == 12345
     assert bool(n1) == True
 
+
 def test_float_methods():
     f1 = Float(24.6)
     f2 = Float(98.7)
@@ -75,6 +76,7 @@ def test_float_methods():
     assert abs(f1) == 24.6
     assert bool(f1) == True
 
+
 @pytest.mark.skip
 def test_harmony_between_classes():
     n1 = Integer(12345)
@@ -83,4 +85,3 @@ def test_harmony_between_classes():
     assert n1 == 12345
     assert f1 == 0.5
     assert n1 + 54321 == Integer(66666)
-
