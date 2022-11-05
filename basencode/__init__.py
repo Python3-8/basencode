@@ -41,7 +41,12 @@ for i in range(3, 65):
 
 def get_num_method(method_name, convert_to_number=True):
     """Gets a built-in Python method and modifies it for overloading operators
-    in `_Number` and its children."""
+    in `_Number` and its children.
+
+    :param method_name: The name of the method
+    :param convert_to_number: Whether or not to convert the result to an
+    instance of `_Number`; defaults to `True`.
+    """
     num_method = _NUM_METHODS.get(method_name)
     if not num_method:
         raise AttributeError(f'{method_name} is not a valid method')
@@ -76,6 +81,7 @@ def get_num_method(method_name, convert_to_number=True):
 
 class Number:
     """Constructs a `Float` if a number with a radix point is provided, otherwise an `Integer`."""
+
     def __new__(cls, n: Union[int, float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                 base: int = 10, digits: List[str] = None, radix_point: str = RADIX_POINT):
         digits = digits if digits else []
@@ -90,7 +96,7 @@ class Number:
 
 
 class _Number:
-    """The parent class for all numbers."""
+    """The parent class for all `Float`s and `Integer`s."""
 
     def __init__(self, n: Union[int, float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                  base: int = 10, digits: List[str] = None):
@@ -151,23 +157,48 @@ class _Number:
         return [x for x in l if not (x in dupl or dupl_add(x))]
 
     def repr_in_dec(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
-        """Uses `repr_in_base` to convert the `_Number` to decimal."""
+        """
+        Uses `repr_in_base` to convert the `_Number` to decimal.
+
+        :param digits: The digits to use in the representation
+        :param mode: Whether to return the representation as a string or a list
+        """
         return self.repr_in_base(10, digits=digits, mode=mode)
 
     def repr_in_bin(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
-        """Uses `repr_in_base` to convert the `_Number` to binary."""
+        """
+        Uses `repr_in_base` to convert the `_Number` to binary.
+
+        :param digits: The digits to use in the representation
+        :param mode: Whether to return the representation as a string or a list
+        """
         return self.repr_in_base(2, digits=digits, mode=mode)
 
     def repr_in_octal(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
-        """Uses `repr_in_base` to convert the `_Number` to octal."""
+        """
+        Uses `repr_in_base` to convert the `_Number` to octal.
+
+        :param digits: The digits to use in the representation
+        :param mode: Whether to return the representation as a string or a list
+        """
         return self.repr_in_base(8, digits=digits, mode=mode)
 
     def repr_in_hex(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
-        """Uses `repr_in_base` to convert the `_Number` to hexadecimal."""
+        """
+        Uses `repr_in_base` to convert the `_Number` to hexadecimal.
+
+        :param digits: The digits to use in the representation
+        :param mode: Whether to return the representation as a string or a list
+        """
         return self.repr_in_base(16, digits=digits, mode=mode)
 
     def repr_in_base64(self, digits: List[str] = None, mode: str = 's') -> Union[str, List[str]]:
-        """Uses `repr_in_base` to convert the `_Number` to base 64."""
+        """
+        Uses `repr_in_base` to convert the `_Number` to base 64.
+
+        :param digits: The digits to use in the representation
+        :param mode: Whether to return the representation as a string or a list
+        """
         return self.repr_in_base(64, digits=digits, mode=mode)
 
     @property
@@ -178,12 +209,13 @@ class _Number:
     def repr_in_base(self, base: int, digits: List[str] = None, mode: str = 's') \
             -> Union[str, List[str]]:
         """
-        Represent the `Integer` in the base provided in the integer `base`. The
-        `digits: list[str]` parameter can be used to represent the `Number` in
-        `base` using a specific set of digits. The `mode: str` parameter
-        indicates  whether the final representation will be returned as a `str`
-        or a `list` (see `README.md` for use cases; `'s'` means string and
-        `'l'` list).
+        Represents the decimal value of the instance of `_Number` in the base
+        provided.
+
+        :param base: The base to represent the `_Number`'s decimal value in
+        :param digits: The digits to use in the representation; these are also
+        set as the default digits (for this object) for the base provided.
+        :param mode: Whether to return the representation as a string or a list
         """
         digits = digits if digits else []
         if mode not in ('s', 'l'):
@@ -233,11 +265,11 @@ class _Number:
 
 
 class Integer(_Number):
-    """`Integer` class, a child of `_Number`."""
+    """The `Integer` class, a child of `_Number`, for whole numbers."""
 
 
 class Float(_Number):
-    """`Float` class, a child of the `_Number` class, using floating point numbers."""
+    """The `Float` class, a child of `_Number`, for non-negative floating point numbers."""
 
     def __init__(self, n: Union[float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                  base: int = 10, digits: List[str] = None, radix_point: str = RADIX_POINT):
@@ -250,12 +282,15 @@ class Float(_Number):
     def repr_in_base(self, base: int, digits: List[str] = None, mode: str = 's',
                      max_frac_places: int = 100) -> Union[str, List[str]]:
         """
-        Represent the `Float` in the base provided in the integer `base` with a
-        maximum of `max_frac_places` fractional places. The`digits: list[str]`
-        parameter can be used to represent the `Number` in `base` using a
-        specific set of digits. The `mode: str` parameter indicates whether the
-        final representation will be returned as a `str` or a `list` (see
-        `README.md` for use cases; `'s'` means string and `'l'` list).
+        Represents the decimal value of the instance of `_Number` in the base
+        provided.
+
+        :param base: The base to represent the `_Number`'s decimal value in
+        :param digits: The digits to use in the representation; these are also
+        set as the default digits (for this object) for the base provided.
+        :param mode: Whether to return the representation as a string or a list
+        :param max_frac_places: The maximum number of digits succeeding the
+        radix point
         """
         digits = digits if digits else []
         whole_part = int(self._dec_value)
