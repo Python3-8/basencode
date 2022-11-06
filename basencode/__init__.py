@@ -364,3 +364,5 @@ class Float(_Number):
         if isinstance(other, _Number):
             other = other._dec_value
         return isclose(float(self._dec_value), other, rel_tol=1e-6)
+
+    __hash__ = _Number.__hash__

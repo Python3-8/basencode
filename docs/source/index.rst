@@ -16,6 +16,7 @@ Indices and tables
    :maxdepth: 2
 
    start
+   features
    api-reference
    license
    changelog
