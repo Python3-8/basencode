@@ -24,29 +24,29 @@ for i in range(3, 65):
 
 _NUM_METHODS = {
     '__eq__': lambda self, other: self == other,
-    '__bool__': lambda self: bool(self),
-    '__abs__': lambda self: abs(self),
+    '__bool__': bool,
+    '__abs__': abs,
     '__add__': lambda self, other: self + other,
     '__sub__': lambda self, other: self - other,
     '__mul__': lambda self, other: self * other,
     '__truediv__': lambda self, other: self / other,
     '__floordiv__': lambda self, other: self // other,
     '__pow__': lambda self, other: self ** other,
-    '__hash__': lambda self: hash(self),
+    '__hash__': hash,
     '__mod__': lambda self, other: self % other,
-    '__divmod__': lambda self, other: divmod(self, other),
+    '__divmod__': divmod,
     '__rshift__': lambda self, other: self >> other,
     '__lshift__': lambda self, other: self << other,
     '__and__': lambda self, other: self & other,
     '__or__': lambda self, other: self | other,
-    '__ceil__': lambda self: ceil(self),
-    '__round__': lambda self, ndigits: round(self, ndigits),
-    '__int__': lambda self: int(self),
-    '__float__': lambda self: float(self),
+    '__ceil__': ceil,
+    '__round__': round,
+    '__int__': int,
+    '__float__': float,
 }
 
 
-def get_num_method(method_name, convert_to_number=True):
+def get_num_method(method_name, convert_to_number=True, strict=False):
     """Gets a built-in Python method and modifies it for overloading operators in ``_Number`` and its children.
 
     :param method_name: The name of the method
@@ -61,7 +61,7 @@ def get_num_method(method_name, convert_to_number=True):
         TYPE_DICT = {
             int: Integer if convert_to_number else int,
             float: Float if convert_to_number else float,
-            Decimal: Decimal,
+            Decimal: float if strict else Decimal,
             bool: bool,
         }
         if other:
@@ -73,13 +73,15 @@ def get_num_method(method_name, convert_to_number=True):
                 val = num_method(self.dec_value, other)
         else:
             val = num_method(self.dec_value)
-        t = TYPE_DICT[type(val) if not isinstance(
-            val, tuple) else type(val[0])]
+        t = TYPE_DICT[type(val[0]) if isinstance(val, tuple) else type(val)]
         if isinstance(val, tuple):
             return tuple(Float(el) for el in val) if t == Decimal else tuple(t(el) for el in val)
         elif isinstance(val, Decimal):
-            return (new_type := Float if val % Decimal('1')
-                    else Integer)(str(val) if new_type == Float else str(int(val)))
+            if strict:
+                return t(val)
+            else:
+                return (new_type := Float if val % Decimal('1')
+                        else Integer)(str(val) if new_type == Float else str(int(val)))
         return t(val)
 
     return convert_from_int_and_call
@@ -99,7 +101,7 @@ class Number:
     def __new__(cls, n: Union[int, float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                 base: int = 10, digits: List[str] = None, radix_point: str = RADIX_POINT):
         digits = digits if digits else []
-        if isinstance(n, int) or isinstance(n, float):
+        if isinstance(n, int) or isinstance(n, float) or isinstance(n, Decimal):
             n_ = str(n)
         else:
             n_ = n
@@ -266,12 +268,12 @@ class _Number:
                 remaining %= base ** place
             if remaining:
                 place -= 1
-        new_digits += digits_[0] * place
+        new_digits.extend([digits_[0]] * place)
         return new_digits if mode == 'l' else ''.join(new_digits)
 
     __eq__ = get_num_method('__eq__')
     __bool__ = get_num_method('__bool__')
-    __abs__ = get_num_method('__abs__', False)
+    __abs__ = get_num_method('__abs__', False, True)
     __add__ = get_num_method('__add__')
     __sub__ = get_num_method('__sub__')
     __mul__ = get_num_method('__mul__')
@@ -281,7 +283,6 @@ class _Number:
     __hash__ = get_num_method('__hash__', False)
     __mod__ = get_num_method('__mod__')
     __divmod__ = get_num_method('__divmod__')
-    __or__ = get_num_method('__or__')
     __ceil__ = get_num_method('__ceil__')
     __round__ = get_num_method('__round__')
     __int__ = get_num_method('__int__', False)
@@ -296,6 +297,11 @@ class Integer(_Number):
     :param digits: The digits used in the provided representation of the number
     """
 
+    __or__ = get_num_method('__or__')
+    __and__ = get_num_method('__and__')
+    __rshift__ = get_num_method('__rshift__')
+    __lshift__ = get_num_method('__lshift__')
+
 
 class Float(_Number):
     """The ``Float`` class, a child of ``_Number``, for non-negative floating point numbers
@@ -309,8 +315,12 @@ class Float(_Number):
     def __init__(self, n: Union[float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                  base: int = 10, digits: List[str] = None, radix_point: str = RADIX_POINT):
         digits = digits if digits else []
-        if radix_point not in str(n):
-            n = str(n) + radix_point
+        if type(n) in (tuple, list):
+            n = [str(el) for el in n]
+        else:
+            n = str(n)
+        if radix_point not in n:
+            n = n + (radix_point if isinstance(n, str) else [radix_point])
         self.radix_point = radix_point
         super().__init__(n, base, digits)
 
@@ -327,8 +337,9 @@ class Float(_Number):
         """
         digits = digits if digits else []
         whole_part = int(self._dec_value)
-        new_digits = Integer(whole_part).repr_in_base(base, mode='l')
         digits_: List[str] = self._get_digits(base, digits)
+        new_digits = Integer(whole_part).repr_in_base(
+            base, digits=digits_, mode='l')
         # fractional part
         new_digits += self.radix_point
         place = -1
