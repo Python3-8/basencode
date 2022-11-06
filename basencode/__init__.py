@@ -86,7 +86,15 @@ def get_num_method(method_name, convert_to_number=True):
 
 
 class Number:
-    """Constructs a ``Float`` if a number with a radix point is provided, otherwise an ``Integer``."""
+    """Constructs a ``Float`` if a number with a radix point is provided, otherwise an ``Integer``.
+
+    :param n: The number to be converted to decimal and stored
+    :param base: The base in which the number provided is represented (this information is used to convert the number to decimal)
+    :param digits: The digits used in the provided representation of the number
+    :param radix_point: The radix point used in the provided representation of the number, if at all
+    :returns: A ``Float`` if a number with a radix point is provided, otherwise an ``Integer``
+    :rtype: Float | Integer
+    """
 
     def __new__(cls, n: Union[int, float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                 base: int = 10, digits: List[str] = None, radix_point: str = RADIX_POINT):
@@ -104,6 +112,9 @@ class Number:
 class _Number:
     """The parent class for all ``Float``\\s and ``Integer``\\s
 
+    :param n: The number to be converted to decimal and stored
+    :param base: The base in which the number provided is represented (this information is used to convert the number to decimal)
+    :param digits: The digits used in the provided representation of the number
     :meta public:
     """
 
@@ -278,11 +289,22 @@ class _Number:
 
 
 class Integer(_Number):
-    """The ``Integer`` class, a child of ``_Number``, for whole numbers"""
+    """The ``Integer`` class, a child of ``_Number``, for whole numbers
+
+    :param n: The number to be converted to decimal and stored
+    :param base: The base in which the number provided is represented (this information is used to convert the number to decimal)
+    :param digits: The digits used in the provided representation of the number
+    """
 
 
 class Float(_Number):
-    """The ``Float`` class, a child of ``_Number``, for non-negative floating point numbers"""
+    """The ``Float`` class, a child of ``_Number``, for non-negative floating point numbers
+
+    :param n: The number to be converted to decimal and stored
+    :param base: The base in which the number provided is represented (this information is used to convert the number to decimal)
+    :param digits: The digits used in the provided representation of the number
+    :param radix_point: The radix point used in the provided representation of the number, if at all
+    """
 
     def __init__(self, n: Union[float, str, Tuple[Union[int, str]], List[Union[int, str]]],
                  base: int = 10, digits: List[str] = None, radix_point: str = RADIX_POINT):
