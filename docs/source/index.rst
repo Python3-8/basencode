@@ -9,6 +9,8 @@ Welcome to Basencode's documentation!
 Basencode is a Python library for representing non-negative numbers in any
 number system.
 
+For the source code and the issue tracker, visit the `GitHub repository <https://github.com/Python3-8/basencode/>`_.
+
 Indices and tables
 ==================
 
