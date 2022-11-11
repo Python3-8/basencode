@@ -1,13 +1,9 @@
-"""
-Basencode
-=========
-"""
-
-from string import ascii_letters, digits as string_digits
-from typing import Dict, List, Tuple, Union
-from math import ceil, isclose
-from decimal import Decimal
 from copy import deepcopy
+from decimal import Decimal
+from math import ceil, isclose
+from string import ascii_letters
+from string import digits as string_digits
+from typing import Dict, List, Tuple, Union
 
 __all__ = 'ALL_DIGITS', 'BASE_DIGITS', 'RADIX_POINT', 'Integer', 'Float', 'Number'
 
@@ -68,9 +64,9 @@ def get_num_method(method_name, convert_to_number=True, strict=False):
             if isinstance(other, _Number):
                 val = num_method(self.dec_value, other.dec_value)
             elif isinstance(other, Decimal):
-                val = num_method(Decimal(str(self.dec_value)), other)
-            else:
                 val = num_method(self.dec_value, other)
+            else:
+                val = num_method(self.dec_value, Decimal(other))
         else:
             val = num_method(self.dec_value)
         t = TYPE_DICT[type(val[0]) if isinstance(val, tuple) else type(val)]
@@ -138,17 +134,17 @@ class _Number:
             frac_part = n[radindex + 1:]
         whole_part = n[:radindex]
         place: int = len(whole_part)
-        num: int = 0
+        num: Decimal = Decimal('0')
+        base_dec = Decimal(base)
         while place:
-            num += digits_.index(whole_part[::-1]
-                                 [place - 1]) * base ** (place - 1)
+            num += Decimal(digits_.index(whole_part[::-1]
+                           [place - 1])) * base_dec ** Decimal(place - 1)
             place -= 1
         place -= 1
         for digit in frac_part:
-            num += Decimal(digits_.index(digit)) * \
-                Decimal(base) ** Decimal(place)
+            num += Decimal(digits_.index(digit)) * base_dec ** Decimal(place)
             place -= 1
-        self._dec_value: Union[int, float, Decimal] = num
+        self._dec_value = num
 
     def __repr__(self):
         return f'{type(self).__name__}({self._dec_value})'
@@ -229,7 +225,7 @@ class _Number:
         return self.repr_in_base(64, digits=digits, mode=mode)
 
     @property
-    def dec_value(self) -> Union[int, float, Decimal]:
+    def dec_value(self) -> Decimal:
         """Getter returns the decimal value of the ``_Number``."""
         return self._dec_value
 
@@ -253,19 +249,21 @@ class _Number:
         elif self._dec_value == 0:
             return digits_[0] if mode == 's' else [digits_[0]]
         place: int = 0
+        base_dec = Decimal(base)
         while True:
-            if base ** place <= self._dec_value and base ** (place + 1) > self._dec_value:
+            if base_dec ** Decimal(place) <= self._dec_value and base_dec ** Decimal(place + 1) > self._dec_value:
                 break
             place += 1
         new_digits: list = []
-        remaining: int = self._dec_value
+        remaining: Decimal = self._dec_value
         while remaining:
-            if base ** place > remaining:
+            place_dec = Decimal(place)
+            if base_dec ** place_dec > remaining:
                 new_digits.append(digits_[0])
             else:
-                new_digit = int(remaining // (base ** place))
+                new_digit = int(remaining // (base_dec ** place_dec))
                 new_digits.append(digits_[new_digit])
-                remaining %= base ** place
+                remaining %= base_dec ** place_dec
             if remaining:
                 place -= 1
         new_digits.extend([digits_[0]] * place)
@@ -344,15 +342,16 @@ class Float(_Number):
         new_digits += self.radix_point
         place = -1
         remaining: Decimal = self._dec_value - Decimal(whole_part)
+        base_dec = Decimal(base)
         while remaining and len(new_digits[new_digits.index(self.radix_point) + 1:]
                                 ) < max_frac_places:
-            if Decimal(base) ** Decimal(place) > remaining:
+            place_dec = Decimal(place)
+            if base_dec ** place_dec > remaining:
                 new_digits.append(digits_[0])
             else:
-                new_digit = int(remaining / Decimal(base) ** Decimal(place))
+                new_digit = int(remaining / base_dec ** place_dec)
                 new_digits.append(digits_[new_digit])
-                remaining -= Decimal(new_digit) * \
-                    Decimal(base) ** Decimal(place)
+                remaining -= Decimal(new_digit) * base_dec ** place_dec
             if remaining:
                 place -= 1
         new_digits += digits_[0] * place
